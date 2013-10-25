@@ -29,7 +29,7 @@ module Jeti; module Log;
             if line.length == 4
               line << ''
             elsif line.length == 5
-              # nothing
+              # do nothing
             else
               raise RuntimeError, "Unexpected header length (#{line.length})"
             end
@@ -54,6 +54,22 @@ module Jeti; module Log;
       (@entries.last.time - @entries.first.time) / 1000.0
     end
 
+    def antenna1_signals?
+      !antenna1_signals.empty?
+    end
+
+    def antenna1_signals
+      @antenna1_signals ||= build_integer_dataset('Rx', 'A1')
+    end
+
+    def antenna2_signals?
+      !antenna2_signals.empty?
+    end
+
+    def antenna2_signals
+      @antenna2_signals ||= build_integer_dataset('Rx', 'A2')
+    end
+
     def rx_voltages?
       !rx_voltages.empty?
     end
@@ -62,19 +78,30 @@ module Jeti; module Log;
       @rx_voltages ||= build_rx_voltages
     end
 
-    private
-
-    def build_raw_dataset(device, sensor)
-      headers, entries = headers_and_entries_by_device(device)
-      sensor_id = (headers.select { |h| h.name == sensor })[0].sensor_id
-      entries.map { |e| [e.time, e.detail(sensor_id)[0][3]] }
-    rescue
-      []
+    def signal_qualities?
+      !signal_qualities.empty?
     end
 
+    def signal_qualities
+      @signal_qualities ||= build_integer_dataset('Rx', "Q")
+    end
+
+    private
+
     def build_rx_voltages
-      volts = build_raw_dataset('Rx', 'U Rx')
-      volts.map { |e| [e[0], e[1].to_i / 100.0] }
+      build_raw_dataset('Rx', 'U Rx', ->(val) { val.to_i / 100.0 })
+    end
+
+    def build_integer_dataset(device, sensor)
+      build_raw_dataset(device, sensor, ->(val) { val.to_i })
+    end
+
+    def build_raw_dataset(device, sensor, modifier = ->(val) { val })
+      headers, entries = headers_and_entries_by_device(device)
+      sensor_id = (headers.select { |h| h.name == sensor })[0].sensor_id
+      entries.map { |e| [e.time, modifier.call(e.detail(sensor_id)[3])] }
+    rescue
+      []
     end
 
     def headers_and_entries_by_device(device)

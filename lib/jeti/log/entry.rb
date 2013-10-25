@@ -15,7 +15,7 @@ module Jeti; module Log;
     end
 
     def detail(sensor_index)
-      @details[sensor_index]
+      @details[sensor_index][0]
     end
 
   end
