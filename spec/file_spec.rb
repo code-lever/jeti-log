@@ -16,10 +16,6 @@ describe Jeti::Log::File do
 
       it { should have(115).rx_voltages }
 
-#      it { should have(16187).entries }
-
-#      it { should have(16187).messages }
-
     end
 
     it 'should raise for invalid or missing files' do
