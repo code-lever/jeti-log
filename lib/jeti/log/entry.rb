@@ -7,11 +7,15 @@ module Jeti; module Log;
     def initialize(time, id, details)
       @time = time
       @id = id
-      @details = details
+      @details = details.each_slice(4).group_by(&:first)
     end
 
     def time
       @time.to_i
+    end
+
+    def detail(sensor_index)
+      @details[sensor_index]
     end
 
   end

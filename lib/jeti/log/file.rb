@@ -35,7 +35,7 @@ module Jeti; module Log;
             end
             @headers << Header.new(line[0], line[1], line[2..4])
           else
-            @entries << Entry.new(line[0], line[1], line[2..4])
+            @entries << Entry.new(line[0], line[1], line[2..-1])
           end
         end
 
@@ -59,17 +59,32 @@ module Jeti; module Log;
     end
 
     def rx_voltages
-      @rx_voltages ||= entries(id_for('Rx', 'U Rx'))
+      @rx_voltages ||= build_rx_voltages
     end
 
     private
 
-    def entries(id)
+    def build_raw_dataset(device, sensor)
+      headers, entries = headers_and_entries_by_device(device)
+      sensor_id = (headers.select { |h| h.name == sensor })[0].sensor_id
+      entries.map { |e| [e.time, e.detail(sensor_id)[0][3]] }
+    rescue
       []
     end
 
-    def id_for(device, sensor)
+    def build_rx_voltages
+      volts = build_raw_dataset('Rx', 'U Rx')
+      volts.map { |e| [e[0], e[1].to_i / 100.0] }
+    end
 
+    def headers_and_entries_by_device(device)
+      headers = @headers.select { |h| h.name == device }
+      return [[],[]] if headers.empty?
+
+      id = headers.first.id
+      headers = @headers.select { |h| h.id == id }
+      entries = @entries.select { |e| e.id == id }
+      [headers, entries]
     end
 
   end

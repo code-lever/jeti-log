@@ -12,6 +12,10 @@ describe Jeti::Log::File do
 
       its(:duration) { should be_within(1.0).of(60.0) }
 
+      its(:rx_voltages?) { should be_true }
+
+      it { should have(115).rx_voltages }
+
 #      it { should have(16187).entries }
 
 #      it { should have(16187).messages }
