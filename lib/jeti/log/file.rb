@@ -156,7 +156,7 @@ module Jeti; module Log;
       raise RuntimeError, 'No coordinates available for KML generation' unless to_kml?
       options = apply_default_placemark_options(options)
 
-      coords = mgps_locations.map { |l| [l[1][:longitude], l[1][:latitude], l[1][:altitude], l[1][:course]] }
+      coords = mgps_locations.map { |l| [l[1][:longitude], l[1][:latitude], l[1][:altitude]] }
       KML::Placemark.new(
           :name => options[:name],
           :style_url => options[:style_url],
@@ -172,7 +172,7 @@ module Jeti; module Log;
     private
 
     def apply_default_file_options options
-      options = { :name => 'Eagle Tree GPS Path' }.merge(options)
+      options = { :name => 'Jeti MGPS Path' }.merge(options)
       options = { :description => 'Session paths for GPS log data' }.merge(options)
       options = { :style_id => 'default-poly-style' }.merge(options)
       options
