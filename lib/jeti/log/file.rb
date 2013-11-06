@@ -59,7 +59,7 @@ module Jeti; module Log;
     end
 
     def antenna1_signals
-      @antenna1_signals ||= build_integer_dataset('Rx', 'A1')
+      @antenna1_signals ||= build_value_dataset('Rx', 'A1')
     end
 
     def antenna2_signals?
@@ -67,7 +67,7 @@ module Jeti; module Log;
     end
 
     def antenna2_signals
-      @antenna2_signals ||= build_integer_dataset('Rx', 'A2')
+      @antenna2_signals ||= build_value_dataset('Rx', 'A2')
     end
 
     def rx_voltages?
@@ -83,24 +83,53 @@ module Jeti; module Log;
     end
 
     def signal_qualities
-      @signal_qualities ||= build_integer_dataset('Rx', "Q")
+      @signal_qualities ||= build_value_dataset('Rx', "Q")
+    end
+
+    def gps
+      build_gps_locations
     end
 
     private
 
+    def build_gps_locations
+      lats = build_raw_dataset('MGPS', 'Latitude')
+      lons = build_raw_dataset('MGPS', 'Longitude')
+      alts = build_raw_dataset('MGPS', 'Altitude')
+      crse = build_raw_dataset('MGPS', 'Course')
+      puts lats.length
+      puts lons.length
+      puts alts.length
+      puts crse.length
+    end
+
     def build_rx_voltages
-      build_raw_dataset('Rx', 'U Rx', ->(val) { val.to_i / 100.0 })
+      build_value_dataset('Rx', 'U Rx', ->(val) { val / 100.0 })
     end
 
-    def build_integer_dataset(device, sensor)
-      build_raw_dataset(device, sensor, ->(val) { val.to_i })
-    end
-
-    def build_raw_dataset(device, sensor, modifier = ->(val) { val })
+    def build_value_dataset(device, sensor, modifier = ->(val) { val })
       headers, entries = headers_and_entries_by_device(device)
       sensor_id = (headers.select { |h| h.name == sensor })[0].sensor_id
-      entries.map { |e| [e.time, modifier.call(e.detail(sensor_id)[3])] }
-    rescue
+      entries.reject! { |e| e.detail(sensor_id).nil? }
+      entries.map { |e| [e.time, modifier.call(e.value(sensor_id))] }
+    end
+
+    def build_raw_dataset(device, sensor)
+      headers, entries = headers_and_entries_by_device(device)
+      puts headers.length
+      puts entries.length
+      sensor_id = (headers.select { |h| h.name == sensor })[0].sensor_id
+      puts "id: #{sensor_id}"
+      #puts entries.inspect
+      #entries.each do |e|
+      #  puts e.detail(sensor_id)
+      #end
+      entries.reject! { |e| e.detail(sensor_id).nil? }
+      v = entries.map { |e| [e.time, e.detail(sensor_id)] }
+ #     puts "entries: #{v.inspect}"
+      v
+    rescue => e
+      puts e
       []
     end
 
