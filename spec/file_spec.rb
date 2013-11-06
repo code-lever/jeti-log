@@ -104,6 +104,8 @@ describe Jeti::Log::File do
 
     its(:mgps_locations?) { should be_true }
 
+    it { should have(539).mgps_locations }
+
     it 'should have some select gps locations' do
       locs = subject.mgps_locations
       loc0 = locs[0]
