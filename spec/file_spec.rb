@@ -107,13 +107,26 @@ describe Jeti::Log::File do
     it { should have(539).mgps_locations }
 
     it 'should have some select gps locations' do
-      locs = subject.mgps_locations
-      loc0 = locs[0]
-      expect(loc0[0]).to eql(219552)
-      expect(loc0[1][:latitude]).to be_within(0.0001).of(41.1856)
-      expect(loc0[1][:longitude]).to be_within(0.0001).of(-96.0103)
-      expect(loc0[1][:altitude]).to be_within(0.1).of(309)
-      expect(loc0[1][:course]).to be_within(0.1).of(0)
+      loc = subject.mgps_locations[0]
+      expect(loc[0]).to eql(219552)
+      expect(loc[1][:latitude]).to be_within(0.0001).of(41.1856)
+      expect(loc[1][:longitude]).to be_within(0.0001).of(-96.0103)
+      expect(loc[1][:altitude]).to eql(309)
+      expect(loc[1][:course]).to eql(0)
+
+      loc = subject.mgps_locations[250]
+      expect(loc[0]).to eql(347038)
+      expect(loc[1][:latitude]).to be_within(0.0001).of(41.1868)
+      expect(loc[1][:longitude]).to be_within(0.0001).of(-96.0094)
+      expect(loc[1][:altitude]).to eql(352)
+      expect(loc[1][:course]).to eql(294)
+
+      loc = subject.mgps_locations[450]
+      expect(loc[0]).to eql(456409)
+      expect(loc[1][:latitude]).to be_within(0.0001).of(41.1871)
+      expect(loc[1][:longitude]).to be_within(0.0001).of(-96.0091)
+      expect(loc[1][:altitude]).to eql(333)
+      expect(loc[1][:course]).to eql(0)
     end
 
   end
