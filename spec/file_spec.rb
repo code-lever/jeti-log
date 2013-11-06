@@ -108,8 +108,8 @@ describe Jeti::Log::File do
       locs = subject.mgps_locations
       loc0 = locs[0]
       expect(loc0[0]).to eql(219552)
-      expect(loc0[1][:latitude]).to be_within(0.001).of(41.18563)
-      expect(loc0[1][:longitude]).to be_within(0.001).of(-96.0103)
+      expect(loc0[1][:latitude]).to be_within(0.0001).of(41.1856)
+      expect(loc0[1][:longitude]).to be_within(0.0001).of(-96.0103)
       expect(loc0[1][:altitude]).to be_within(0.1).of(309)
       expect(loc0[1][:course]).to be_within(0.1).of(0)
     end
