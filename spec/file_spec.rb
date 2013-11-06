@@ -52,6 +52,14 @@ describe Jeti::Log::File do
 
     its(:mgps_locations?) { should be_false }
 
+    its(:to_kml?) { should be_false }
+
+    specify { expect { subject.to_kml }.to raise_error }
+
+    specify { expect { subject.to_kml_file }.to raise_error }
+
+    specify { expect { subject.to_kml_placemark }.to raise_error }
+
   end
 
   context 'with data file gps-crash.log' do
@@ -128,6 +136,20 @@ describe Jeti::Log::File do
       expect(loc[1][:altitude]).to eql(333)
       expect(loc[1][:course]).to eql(0)
     end
+
+    its(:to_kml?) { should be_true }
+
+    its(:to_kml) { should be_a(String) }
+
+    its(:to_kml_file) { should be_a(KMLFile) }
+
+    it 'should take options for file and placemark' do
+      kml = subject.to_kml_file({ :name => 'File Name' }, { :name => 'Placemark Name' })
+      kml.objects[0].name.should eql('File Name')
+      kml.objects[0].features[0].name.should eql('Placemark Name')
+    end
+
+    its(:to_kml_placemark) { should be_a(KML::Placemark) }
 
   end
 

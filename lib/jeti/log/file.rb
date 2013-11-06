@@ -1,4 +1,5 @@
 require 'open-uri'
+require 'ruby_kml'
 
 module Jeti; module Log;
 
@@ -94,7 +95,97 @@ module Jeti; module Log;
      @mgps_locations ||= build_mgps_locations
     end
 
+    # Determines if KML methods can be called for this session.
+    #
+    # @return [Boolean] true if KML can be generated for this session, false otherwise
+    def to_kml?
+      mgps_locations?
+    end
+
+    # Converts the session into a KML document containing a placemark.
+    #
+    # @param file_options [Hash] hash containing options for file
+    # @param placemark_options [Hash] hash containing options for placemark
+    # @return [String] KML document for the session
+    # @see #to_kml_file file options
+    # @see #to_kml_placemark placemark options
+    def to_kml(file_options = {}, placemark_options = {})
+      raise RuntimeError, 'No coordinates available for KML generation' unless to_kml?
+      to_kml_file(file_options, placemark_options).render
+    end
+
+    # Converts the session into a KMLFile containing a placemark.
+    #
+    # @param file_options [Hash] hash containing options for file
+    # @option file_options [String] :name name option of KML::Document
+    # @option file_options [String] :description name option of KML::Document
+    # @option file_options [String] :style_id id option of KML::Style
+    # @param placemark_options [Hash] hash containing options for placemark
+    # @return [KMLFile] file for the session
+    # @see #to_kml_placemark placemark options
+    def to_kml_file(file_options = {}, placemark_options = {})
+      raise RuntimeError, 'No coordinates available for KML generation' unless to_kml?
+      options = apply_default_file_options(file_options)
+
+      kml = KMLFile.new
+      kml.objects << KML::Document.new(
+          :name => options[:name],
+          :description => options[:description],
+          :styles => [
+              KML::Style.new(
+                  :id => options[:style_id],
+                  :line_style => KML::LineStyle.new(:color => '7F00FFFF', :width => 4),
+                  :poly_style => KML::PolyStyle.new(:color => '7F00FF00')
+              )
+          ],
+          :features => [ to_kml_placemark(placemark_options) ]
+      )
+      kml
+    end
+
+    # Converts the session into a KML::Placemark containing GPS coordinates.
+    #
+    # @param options [Hash] hash containing options for placemark
+    # @option options [String] :altitude_mode altitude_mode option of KML::LineString
+    # @option options [Boolean] :extrude extrude option of KML::LineString
+    # @option options [String] :name name option of KML::Placemark
+    # @option options [String] :style_url style_url option of KML::Placemark
+    # @option options [Boolean] :tessellate tessellate option of KML::LineString
+    # @return [KML::Placemark] placemark for the session
+    def to_kml_placemark(options = {})
+      raise RuntimeError, 'No coordinates available for KML generation' unless to_kml?
+      options = apply_default_placemark_options(options)
+
+      coords = mgps_locations.map { |l| [l[1][:longitude], l[1][:latitude], l[1][:altitude], l[1][:course]] }
+      KML::Placemark.new(
+          :name => options[:name],
+          :style_url => options[:style_url],
+          :geometry => KML::LineString.new(
+              :altitude_mode => options[:altitude_mode],
+              :extrude => options[:extrude],
+              :tessellate => options[:tessellate],
+              :coordinates => coords.map { |c| c.join(',') }.join(' ')
+          )
+      )
+    end
+
     private
+
+    def apply_default_file_options options
+      options = { :name => 'Eagle Tree GPS Path' }.merge(options)
+      options = { :description => 'Session paths for GPS log data' }.merge(options)
+      options = { :style_id => 'default-poly-style' }.merge(options)
+      options
+    end
+
+    def apply_default_placemark_options options
+      options = { :altitude_mode => 'absolute' }.merge(options)
+      options = { :extrude => true }.merge(options)
+      options = { :name => "Session (#{duration.round(1)}s)" }.merge(options)
+      options = { :style_url => '#default-poly-style' }.merge(options)
+      options = { :tessellate => true }.merge(options)
+      options
+    end
 
     def build_mgps_locations
       lats = build_value_dataset('MGPS', 'Latitude')
