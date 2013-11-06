@@ -91,12 +91,12 @@ module Jeti; module Log;
     end
 
     def mgps_locations
-     @mgps_locations ||= build_gps_locations
+     @mgps_locations ||= build_mgps_locations
     end
 
     private
 
-    def build_gps_locations
+    def build_mgps_locations
       lats = build_value_dataset('MGPS', 'Latitude')
       lons = build_value_dataset('MGPS', 'Longitude')
       alts = build_value_dataset('MGPS', 'Altitude')
