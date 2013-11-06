@@ -93,10 +93,10 @@ module Jeti; module Log;
     private
 
     def build_gps_locations
-      lats = build_raw_dataset('MGPS', 'Latitude')
-      lons = build_raw_dataset('MGPS', 'Longitude')
-      alts = build_raw_dataset('MGPS', 'Altitude')
-      crse = build_raw_dataset('MGPS', 'Course')
+      lats = build_value_dataset('MGPS', 'Latitude')
+      lons = build_value_dataset('MGPS', 'Longitude')
+      alts = build_value_dataset('MGPS', 'Altitude')
+      crse = build_value_dataset('MGPS', 'Course')
       puts lats.length
       puts lons.length
       puts alts.length
@@ -112,25 +112,6 @@ module Jeti; module Log;
       sensor_id = (headers.select { |h| h.name == sensor })[0].sensor_id
       entries.reject! { |e| e.detail(sensor_id).nil? }
       entries.map { |e| [e.time, modifier.call(e.value(sensor_id))] }
-    end
-
-    def build_raw_dataset(device, sensor)
-      headers, entries = headers_and_entries_by_device(device)
-      puts headers.length
-      puts entries.length
-      sensor_id = (headers.select { |h| h.name == sensor })[0].sensor_id
-      puts "id: #{sensor_id}"
-      #puts entries.inspect
-      #entries.each do |e|
-      #  puts e.detail(sensor_id)
-      #end
-      entries.reject! { |e| e.detail(sensor_id).nil? }
-      v = entries.map { |e| [e.time, e.detail(sensor_id)] }
- #     puts "entries: #{v.inspect}"
-      v
-    rescue => e
-      puts e
-      []
     end
 
     def headers_and_entries_by_device(device)

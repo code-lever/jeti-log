@@ -18,6 +18,8 @@ module Jeti; module Log;
 
     def detail(sensor_id)
       @details[sensor_id][0]
+    rescue
+      nil
     end
 
     def value(sensor_id)
