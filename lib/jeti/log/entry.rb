@@ -8,8 +8,6 @@ module Jeti; module Log;
       @time = time
       @id = id
       @details = details.each_slice(4).group_by(&:first)
-      #puts @id
-      #puts @details
     end
 
     def time
@@ -28,7 +26,7 @@ module Jeti; module Log;
       when '1'
         raw[3].to_i
       when '9'
-        format_gps(raw[2], raw[3])
+        format_gps(raw[2].to_i, raw[3].to_i)
       else
         nil
       end

@@ -86,8 +86,12 @@ module Jeti; module Log;
       @signal_qualities ||= build_value_dataset('Rx', "Q")
     end
 
-    def gps
-      build_gps_locations
+    def mgps_locations?
+      device_present?('MGPS')
+    end
+
+    def mgps_locations
+     @mgps_locations ||= build_gps_locations
     end
 
     private
@@ -96,11 +100,19 @@ module Jeti; module Log;
       lats = build_value_dataset('MGPS', 'Latitude')
       lons = build_value_dataset('MGPS', 'Longitude')
       alts = build_value_dataset('MGPS', 'Altitude')
-      crse = build_value_dataset('MGPS', 'Course')
-      puts lats.length
-      puts lons.length
-      puts alts.length
-      puts crse.length
+      crss = build_value_dataset('MGPS', 'Course')
+
+      coords = lats.map { |l| [l[0], { latitude: l[1] }] }
+      coords.map do |c|
+        [
+          c[0],
+          {
+            longitude: lons.min_by { |lon| (lon[0] - c[0]).abs }[1],
+            altitude:  alts.min_by { |alt| (alt[0] - c[0]).abs }[1],
+            course:    crss.min_by { |crs| (crs[0] - c[0]).abs }[1]
+          }.merge(c[1])
+        ]
+      end
     end
 
     def build_rx_voltages
@@ -122,6 +134,10 @@ module Jeti; module Log;
       headers = @headers.select { |h| h.id == id }
       entries = @entries.select { |e| e.id == id }
       [headers, entries]
+    end
+
+    def device_present?(device)
+      @headers.any? { |h| h.name == device }
     end
 
   end
