@@ -116,25 +116,25 @@ describe Jeti::Log::File do
 
     it 'should have some select gps locations' do
       loc = subject.mgps_locations[0]
-      expect(loc[0]).to eql(219552)
-      expect(loc[1][:latitude]).to be_within(0.0001).of(41.1856)
-      expect(loc[1][:longitude]).to be_within(0.0001).of(-96.0103)
-      expect(loc[1][:altitude]).to eql(309)
-      expect(loc[1][:course]).to eql(0)
+      expect(loc.time).to eql(219552)
+      expect(loc.latitude).to be_within(0.0001).of(41.1856)
+      expect(loc.longitude).to be_within(0.0001).of(-96.0103)
+      expect(loc.altitude(:meters)).to eql(309)
+      expect(loc.course).to eql(0)
 
       loc = subject.mgps_locations[250]
-      expect(loc[0]).to eql(347038)
-      expect(loc[1][:latitude]).to be_within(0.0001).of(41.1868)
-      expect(loc[1][:longitude]).to be_within(0.0001).of(-96.0094)
-      expect(loc[1][:altitude]).to eql(352)
-      expect(loc[1][:course]).to eql(294)
+      expect(loc.time).to eql(347038)
+      expect(loc.latitude).to be_within(0.0001).of(41.1868)
+      expect(loc.longitude).to be_within(0.0001).of(-96.0094)
+      expect(loc.altitude(:meters)).to eql(352)
+      expect(loc.course).to eql(294)
 
       loc = subject.mgps_locations[450]
-      expect(loc[0]).to eql(456409)
-      expect(loc[1][:latitude]).to be_within(0.0001).of(41.1871)
-      expect(loc[1][:longitude]).to be_within(0.0001).of(-96.0091)
-      expect(loc[1][:altitude]).to eql(333)
-      expect(loc[1][:course]).to eql(0)
+      expect(loc.time).to eql(456409)
+      expect(loc.latitude).to be_within(0.0001).of(41.1871)
+      expect(loc.longitude).to be_within(0.0001).of(-96.0091)
+      expect(loc.altitude(:meters)).to eql(333)
+      expect(loc.course).to eql(0)
     end
 
     its(:to_kml?) { should be_true }

@@ -156,7 +156,7 @@ module Jeti; module Log;
       raise RuntimeError, 'No coordinates available for KML generation' unless to_kml?
       options = apply_default_placemark_options(options)
 
-      coords = mgps_locations.map { |l| [l[1][:longitude], l[1][:latitude], l[1][:altitude]] }
+      coords = mgps_locations.map { |l| [l.longitude, l.latitude, l.altitude] }
       KML::Placemark.new(
           :name => options[:name],
           :style_url => options[:style_url],
@@ -193,16 +193,13 @@ module Jeti; module Log;
       alts = build_value_dataset('MGPS', 'Altitude')
       crss = build_value_dataset('MGPS', 'Course')
 
-      coords = lats.map { |l| [l[0], { latitude: l[1] }] }
-      coords.map do |c|
-        [
-          c[0],
-          {
-            longitude: lons.min_by { |lon| (lon[0] - c[0]).abs }[1],
-            altitude:  alts.min_by { |alt| (alt[0] - c[0]).abs }[1],
-            course:    crss.min_by { |crs| (crs[0] - c[0]).abs }[1]
-          }.merge(c[1])
-        ]
+      lats.map do |raw_lat|
+        time = raw_lat[0]
+        lat = raw_lat[1]
+        lon = lons.min_by { |lon| (lon[0] - time).abs }[1]
+        alt = alts.min_by { |alt| (alt[0] - time).abs }[1]
+        crs = crss.min_by { |crs| (crs[0] - time).abs }[1]
+        Coordinate.new(time, lat, lon, alt, crs)
       end
     end
 
