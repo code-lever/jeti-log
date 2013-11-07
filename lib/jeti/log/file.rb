@@ -71,6 +71,36 @@ module Jeti; module Log;
       @antenna2_signals ||= build_value_dataset(/Rx/, /A2/)
     end
 
+    def bec_voltages?
+      !bec_voltages.empty?
+    end
+
+    def bec_voltages
+      @bec_voltages ||= build_bec_voltages
+    end
+
+    def esc_voltages?
+      !esc_voltages.empty?
+    end
+
+    def esc_voltages
+      @esc_voltages ||= build_esc_voltages
+    end
+
+    def esc_temperatures?
+      !esc_temperatures.empty?
+    end
+
+    def esc_temperatures(unit = :c)
+      @esc_temperatures ||= build_value_dataset(/Mezon/i, /Temp/)
+      case unit
+      when :f
+        @esc_temperatures.map { |t| [t[0], 32 + (t[1] * (9.0 / 5.0))] }
+      else
+        @esc_temperatures
+      end
+    end
+
     def rx_voltages?
       !rx_voltages.empty?
     end
@@ -201,6 +231,14 @@ module Jeti; module Log;
         crs = crss.min_by { |crs| (crs[0] - time).abs }[1]
         Coordinate.new(time, lat, lon, alt, crs)
       end
+    end
+
+    def build_bec_voltages
+      build_value_dataset(/Mezon/i, /U BEC/, ->(val) { val / 10.0 })
+    end
+
+    def build_esc_voltages
+      build_value_dataset(/Mezon/i, /U Battery/, ->(val) { val / 10.0 })
     end
 
     def build_rx_voltages

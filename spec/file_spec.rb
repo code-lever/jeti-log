@@ -153,6 +153,110 @@ describe Jeti::Log::File do
 
   end
 
+  context 'with data file mezon-1.log' do
+
+    before(:all) { @file = Jeti::Log::File.new(data_file('mezon-1.log')) }
+
+    subject { @file }
+
+    its(:duration) { should be_within(0.1).of(9.2) }
+
+    its(:antenna1_signals?) { should be_true }
+
+    its(:antenna2_signals?) { should be_true }
+
+    its(:bec_voltages?) { should be_true }
+
+    it 'should have some select bec voltages' do
+      expect(subject.bec_voltages[0]).to eql([1009713, 5.5])
+      expect(subject.bec_voltages[10]).to eql([1012219, 5.5])
+      expect(subject.bec_voltages[35]).to eql([1018579, 5.5])
+    end
+
+    its(:esc_voltages?) { should be_true }
+
+    it 'should have some select esc voltages' do
+      expect(subject.esc_voltages[0]).to eql([1009713, 22.9])
+      expect(subject.esc_voltages[10]).to eql([1011179, 22.9])
+      expect(subject.esc_voltages[50]).to eql([1016099, 22.9])
+      expect(subject.esc_voltages[60]).to eql([1017179, 22.9])
+    end
+
+    its(:esc_temperatures?) { should be_true }
+
+    its(:rx_voltages?) { should be_true }
+
+    its(:signal_qualities?) { should be_true }
+
+    its(:mgps_locations?) { should be_false }
+
+    its(:to_kml?) { should be_false }
+
+    specify { expect { subject.to_kml }.to raise_error }
+
+    specify { expect { subject.to_kml_file }.to raise_error }
+
+    specify { expect { subject.to_kml_placemark }.to raise_error }
+
+  end
+
+  context 'with data file mezon-2.log' do
+
+    before(:all) { @file = Jeti::Log::File.new(data_file('mezon-2.log')) }
+
+    subject { @file }
+
+    its(:duration) { should be_within(0.1).of(43.6) }
+
+    its(:antenna1_signals?) { should be_true }
+
+    its(:antenna2_signals?) { should be_true }
+
+    its(:bec_voltages?) { should be_true }
+
+    it 'should have some select bec voltages' do
+      expect(subject.bec_voltages[0]).to eql([304210, 5.5])
+      expect(subject.bec_voltages[10]).to eql([306719, 5.5])
+      expect(subject.bec_voltages[50]).to eql([316519, 5.5])
+      expect(subject.bec_voltages[120]).to eql([333722, 5.5])
+    end
+
+    its(:esc_voltages?) { should be_true }
+
+    it 'should have some select esc voltages' do
+      expect(subject.esc_voltages[0]).to eql([304210, 46.2])
+      expect(subject.esc_voltages[10]).to eql([305578, 46.2])
+      expect(subject.esc_voltages[50]).to eql([310319, 46.2])
+      expect(subject.esc_voltages[160]).to eql([323800, 46.2])
+    end
+
+    its(:esc_temperatures?) { should be_true }
+
+    it 'should have some select esc temperatures' do
+      expect(subject.esc_temperatures(:c)[0]).to eql([304210, 17])
+      expect(subject.esc_temperatures(:f)[0]).to eql([304210, 62.6])
+      expect(subject.esc_temperatures(:c)[10]).to eql([310018, 17])
+      expect(subject.esc_temperatures(:f)[10]).to eql([310018, 62.6])
+      expect(subject.esc_temperatures(:c)[50]).to eql([334623, 16])
+      expect(subject.esc_temperatures(:f)[50]).to eql([334623, 60.8])
+    end
+
+    its(:rx_voltages?) { should be_true }
+
+    its(:signal_qualities?) { should be_true }
+
+    its(:mgps_locations?) { should be_false }
+
+    its(:to_kml?) { should be_false }
+
+    specify { expect { subject.to_kml }.to raise_error }
+
+    specify { expect { subject.to_kml_file }.to raise_error }
+
+    specify { expect { subject.to_kml_placemark }.to raise_error }
+
+  end
+
   it 'should raise for invalid or missing files' do
     files = invalid_data_files
     files.should have(9).files
