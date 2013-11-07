@@ -60,7 +60,7 @@ module Jeti; module Log;
     end
 
     def antenna1_signals
-      @antenna1_signals ||= build_value_dataset('Rx', 'A1')
+      @antenna1_signals ||= build_value_dataset(/Rx/, /A1/)
     end
 
     def antenna2_signals?
@@ -68,7 +68,7 @@ module Jeti; module Log;
     end
 
     def antenna2_signals
-      @antenna2_signals ||= build_value_dataset('Rx', 'A2')
+      @antenna2_signals ||= build_value_dataset(/Rx/, /A2/)
     end
 
     def rx_voltages?
@@ -84,11 +84,11 @@ module Jeti; module Log;
     end
 
     def signal_qualities
-      @signal_qualities ||= build_value_dataset('Rx', "Q")
+      @signal_qualities ||= build_value_dataset(/Rx/, /Q/)
     end
 
     def mgps_locations?
-      device_present?('MGPS')
+      device_present?(/MGPS/)
     end
 
     def mgps_locations
@@ -188,10 +188,10 @@ module Jeti; module Log;
     end
 
     def build_mgps_locations
-      lats = build_value_dataset('MGPS', 'Latitude')
-      lons = build_value_dataset('MGPS', 'Longitude')
-      alts = build_value_dataset('MGPS', 'Altitude')
-      crss = build_value_dataset('MGPS', 'Course')
+      lats = build_value_dataset(/MGPS/, /Latitude/)
+      lons = build_value_dataset(/MGPS/, /Longitude/)
+      alts = build_value_dataset(/MGPS/, /Altitude/)
+      crss = build_value_dataset(/MGPS/, /Course/)
 
       lats.map do |raw_lat|
         time = raw_lat[0]
@@ -204,18 +204,18 @@ module Jeti; module Log;
     end
 
     def build_rx_voltages
-      build_value_dataset('Rx', 'U Rx', ->(val) { val / 100.0 })
+      build_value_dataset(/Rx/, /U Rx/, ->(val) { val / 100.0 })
     end
 
     def build_value_dataset(device, sensor, modifier = ->(val) { val })
       headers, entries = headers_and_entries_by_device(device)
-      sensor_id = (headers.select { |h| h.name == sensor })[0].sensor_id
+      sensor_id = (headers.select { |h| sensor =~ h.name })[0].sensor_id
       entries.reject! { |e| e.detail(sensor_id).nil? }
       entries.map { |e| [e.time, modifier.call(e.value(sensor_id))] }
     end
 
     def headers_and_entries_by_device(device)
-      headers = @headers.select { |h| h.name == device }
+      headers = @headers.select { |h| device =~ h.name }
       return [[],[]] if headers.empty?
 
       id = headers.first.id
@@ -225,7 +225,7 @@ module Jeti; module Log;
     end
 
     def device_present?(device)
-      @headers.any? { |h| h.name == device }
+      @headers.any? { |h| device =~ h.name }
     end
 
   end
