@@ -101,6 +101,30 @@ module Jeti; module Log;
       end
     end
 
+    def esc_run_times?
+      !esc_run_times.empty?
+    end
+
+    def esc_run_times
+      @esc_run_times ||= build_value_dataset(/Mezon/i, /Run Time/)
+    end
+
+    def esc_capacities?
+      !esc_capacities.empty?
+    end
+
+    def esc_capacities
+      @esc_capacities ||= build_value_dataset(/Mezon/i, /Capacity/)
+    end
+
+    def esc_rpms?
+      !esc_rpms.empty?
+    end
+
+    def esc_rpms
+      @esc_rpms ||= build_value_dataset(/Mezon/i, /Revolution/)
+    end
+
     def rx_voltages?
       !rx_voltages.empty?
     end

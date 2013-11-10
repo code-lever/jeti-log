@@ -257,6 +257,84 @@ describe Jeti::Log::File do
 
   end
 
+  context 'with data file mezon-3.log' do
+
+    before(:all) { @file = Jeti::Log::File.new(data_file('mezon-3.log')) }
+
+    subject { @file }
+
+    its(:duration) { should be_within(1).of(371) }
+
+    its(:antenna1_signals?) { should be_true }
+
+    its(:antenna2_signals?) { should be_true }
+
+    its(:bec_voltages?) { should be_true }
+
+    it 'should have some select bec voltages' do
+      expect(subject.bec_voltages[0]).to eql([180401, 5.5])
+      expect(subject.bec_voltages[10]).to eql([182518, 5.5])
+      expect(subject.bec_voltages[50]).to eql([190579, 5.5])
+      expect(subject.bec_voltages[120]).to eql([204359, 5.5])
+    end
+
+    its(:esc_voltages?) { should be_true }
+
+    it 'should have some select esc voltages' do
+      expect(subject.esc_voltages[0]).to eql([180401, 49.8])
+      expect(subject.esc_voltages[10]).to eql([181418, 49.8])
+      expect(subject.esc_voltages[50]).to eql([185679, 49.8])
+      expect(subject.esc_voltages[1600]).to eql([338418, 47.9])
+    end
+
+    its(:esc_temperatures?) { should be_true }
+
+    it 'should have some select esc temperatures' do
+      expect(subject.esc_temperatures(:c)[0]).to eql([180401, 21])
+      expect(subject.esc_temperatures(:c)[100]).to eql([229858, 25])
+      expect(subject.esc_temperatures(:c)[500]).to eql([426701, 34])
+    end
+
+    its(:esc_run_times?) { should be_true }
+
+    it 'should have some select run times' do
+      expect(subject.esc_run_times[0]).to eql([180401, 0])
+      expect(subject.esc_run_times[100]).to eql([278678, 92])
+      expect(subject.esc_run_times[370]).to eql([548638, 294])
+    end
+
+    its(:esc_capacities?) { should be_true }
+
+    it 'should have some select capacities' do
+      expect(subject.esc_capacities[0]).to eql([180401, 0])
+      expect(subject.esc_capacities[100]).to eql([230044, 81])
+      expect(subject.esc_capacities[700]).to eql([528257, 696])
+    end
+
+    its(:esc_rpms?) { should be_true }
+
+    it 'should have some select rpms' do
+      expect(subject.esc_rpms[0]).to eql([180401, 0])
+      expect(subject.esc_rpms[100]).to eql([190579, 789])
+      expect(subject.esc_rpms[1000]).to eql([279458, 2521])
+    end
+
+    its(:rx_voltages?) { should be_true }
+
+    its(:signal_qualities?) { should be_true }
+
+    its(:mgps_locations?) { should be_false }
+
+    its(:to_kml?) { should be_false }
+
+    specify { expect { subject.to_kml }.to raise_error }
+
+    specify { expect { subject.to_kml_file }.to raise_error }
+
+    specify { expect { subject.to_kml_placemark }.to raise_error }
+
+  end
+
   it 'should raise for invalid or missing files' do
     files = invalid_data_files
     files.should have(9).files

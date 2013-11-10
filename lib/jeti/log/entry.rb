@@ -23,8 +23,12 @@ module Jeti; module Log;
     def value(sensor_id)
       raw = detail(sensor_id)
       case raw[1]
-      when '1'
+      when '1','4','8'
         raw[3].to_i
+      when '5'
+        min = (raw[3].to_i & 0xFF00) >> 8
+        sec = (raw[3].to_i & 0x00FF)
+        (min * 60) + sec
       when '9'
         format_gps(raw[2].to_i, raw[3].to_i)
       else
