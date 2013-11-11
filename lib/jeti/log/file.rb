@@ -60,7 +60,7 @@ module Jeti; module Log;
     end
 
     def antenna1_signals
-      @antenna1_signals ||= build_value_dataset(/Rx/, /A1/)
+      @antenna1_signals ||= value_dataset(/Rx/, /A1/)
     end
 
     def antenna2_signals?
@@ -68,7 +68,7 @@ module Jeti; module Log;
     end
 
     def antenna2_signals
-      @antenna2_signals ||= build_value_dataset(/Rx/, /A2/)
+      @antenna2_signals ||= value_dataset(/Rx/, /A2/)
     end
 
     def rx_voltages?
@@ -84,7 +84,7 @@ module Jeti; module Log;
     end
 
     def signal_qualities
-      @signal_qualities ||= build_value_dataset(/Rx/, /Q/)
+      @signal_qualities ||= value_dataset(/Rx/, /Q/)
     end
 
     def mgps_locations?
@@ -185,6 +185,13 @@ module Jeti; module Log;
       )
     end
 
+    def value_dataset(device, sensor, modifier = ->(val) { val })
+      headers, entries = headers_and_entries_by_device(device)
+      sensor_id = (headers.select { |h| sensor =~ h.name })[0].sensor_id
+      entries.reject! { |e| e.detail(sensor_id).nil? }
+      entries.map { |e| [e.time, modifier.call(e.value(sensor_id))] }
+    end
+
     private
 
     def apply_default_file_options options
@@ -204,15 +211,15 @@ module Jeti; module Log;
     end
 
     def build_mezon_data
-      vbatts = build_value_dataset(/Mezon/i, /U Battery/, ->(val) { val / 10.0 })
-      ibatts = build_value_dataset(/Mezon/i, /I Battery/)
-      vbecs = build_value_dataset(/Mezon/i, /U BEC/, ->(val) { val / 10.0 })
-      ibecs = build_value_dataset(/Mezon/i, /I BEC/)
-      mahs = build_value_dataset(/Mezon/i, /Capacity/)
-      rpms = build_value_dataset(/Mezon/i, /Revolution/)
-      temps = build_value_dataset(/Mezon/i, /Temp/)
-      times = build_value_dataset(/Mezon/i, /Run Time/)
-      pwms = build_value_dataset(/Mezon/i, /PWM/)
+      vbatts = value_dataset(/Mezon/i, /U Battery/, ->(val) { val / 10.0 })
+      ibatts = value_dataset(/Mezon/i, /I Battery/)
+      vbecs = value_dataset(/Mezon/i, /U BEC/, ->(val) { val / 10.0 })
+      ibecs = value_dataset(/Mezon/i, /I BEC/)
+      mahs = value_dataset(/Mezon/i, /Capacity/)
+      rpms = value_dataset(/Mezon/i, /Revolution/)
+      temps = value_dataset(/Mezon/i, /Temp/)
+      times = value_dataset(/Mezon/i, /Run Time/)
+      pwms = value_dataset(/Mezon/i, /PWM/)
 
       vbatts.map do |raw_vb|
         time = raw_vb[0]
@@ -230,10 +237,10 @@ module Jeti; module Log;
     end
 
     def build_mgps_locations
-      lats = build_value_dataset(/MGPS/, /Latitude/)
-      lons = build_value_dataset(/MGPS/, /Longitude/)
-      alts = build_value_dataset(/MGPS/, /Altitude/)
-      crss = build_value_dataset(/MGPS/, /Course/)
+      lats = value_dataset(/MGPS/, /Latitude/)
+      lons = value_dataset(/MGPS/, /Longitude/)
+      alts = value_dataset(/MGPS/, /Altitude/)
+      crss = value_dataset(/MGPS/, /Course/)
 
       lats.map do |raw_lat|
         time = raw_lat[0]
@@ -246,18 +253,11 @@ module Jeti; module Log;
     end
 
     def build_rx_voltages
-      build_value_dataset(/Rx/, /U Rx/, ->(val) { val / 100.0 })
+      value_dataset(/Rx/, /U Rx/, ->(val) { val / 100.0 })
     end
 
     def build_tx_data
       []
-    end
-
-    def build_value_dataset(device, sensor, modifier = ->(val) { val })
-      headers, entries = headers_and_entries_by_device(device)
-      sensor_id = (headers.select { |h| sensor =~ h.name })[0].sensor_id
-      entries.reject! { |e| e.detail(sensor_id).nil? }
-      entries.map { |e| [e.time, modifier.call(e.value(sensor_id))] }
     end
 
     def headers_and_entries_by_device(device)
