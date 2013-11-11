@@ -186,7 +186,7 @@ module Jeti; module Log;
     end
 
     def value_dataset(device, sensor, modifier = ->(val) { val })
-      headers, entries = headers_and_entries_by_device(device)
+      headers, entries = headers_and_entries_for_device(device)
       sensor_id = (headers.select { |h| sensor =~ h.name })[0].sensor_id
       entries.reject! { |e| e.detail(sensor_id).nil? }
       entries.map { |e| [e.time, modifier.call(e.value(sensor_id))] }
@@ -218,7 +218,11 @@ module Jeti; module Log;
       []
     end
 
-    def headers_and_entries_by_device(device)
+    def device_present?(device)
+      @headers.any? { |h| device =~ h.name }
+    end
+
+    def headers_and_entries_for_device(device)
       headers = @headers.select { |h| device =~ h.name }
       return [[],[]] if headers.empty?
 
@@ -226,10 +230,6 @@ module Jeti; module Log;
       headers = @headers.select { |h| h.id == id }
       entries = @entries.select { |e| e.id == id }
       [headers, entries]
-    end
-
-    def device_present?(device)
-      @headers.any? { |h| device =~ h.name }
     end
 
   end
