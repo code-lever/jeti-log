@@ -50,7 +50,7 @@ describe Jeti::Log::File do
       expect(subject.signal_qualities[90]).to eql([1120425, 100])
     end
 
-    its(:mgps_locations?) { should be_false }
+    its(:mgps_data?) { should be_false }
 
     its(:to_kml?) { should be_false }
 
@@ -110,26 +110,26 @@ describe Jeti::Log::File do
       expect(subject.signal_qualities[90]).to eql([265538, 100])
     end
 
-    its(:mgps_locations?) { should be_true }
+    its(:mgps_data?) { should be_true }
 
-    it { should have(539).mgps_locations }
+    it { should have(539).mgps_data }
 
     it 'should have some select gps locations' do
-      loc = subject.mgps_locations[0]
+      loc = subject.mgps_data[0]
       expect(loc.time).to eql(219552)
       expect(loc.latitude).to be_within(0.0001).of(41.1856)
       expect(loc.longitude).to be_within(0.0001).of(-96.0103)
       expect(loc.altitude(:meters)).to eql(309)
       expect(loc.course).to eql(0)
 
-      loc = subject.mgps_locations[250]
+      loc = subject.mgps_data[250]
       expect(loc.time).to eql(347038)
       expect(loc.latitude).to be_within(0.0001).of(41.1868)
       expect(loc.longitude).to be_within(0.0001).of(-96.0094)
       expect(loc.altitude(:meters)).to eql(352)
       expect(loc.course).to eql(294)
 
-      loc = subject.mgps_locations[450]
+      loc = subject.mgps_data[450]
       expect(loc.time).to eql(456409)
       expect(loc.latitude).to be_within(0.0001).of(41.1871)
       expect(loc.longitude).to be_within(0.0001).of(-96.0091)
@@ -171,7 +171,7 @@ describe Jeti::Log::File do
 
     its(:signal_qualities?) { should be_true }
 
-    its(:mgps_locations?) { should be_false }
+    its(:mgps_data?) { should be_false }
 
     its(:mezon_data?) { should be_true }
 
@@ -221,7 +221,7 @@ describe Jeti::Log::File do
 
     its(:signal_qualities?) { should be_true }
 
-    its(:mgps_locations?) { should be_false }
+    its(:mgps_data?) { should be_false }
 
     its(:mezon_data?) { should be_true }
 
@@ -277,7 +277,7 @@ describe Jeti::Log::File do
 
     its(:signal_qualities?) { should be_true }
 
-    its(:mgps_locations?) { should be_false }
+    its(:mgps_data?) { should be_false }
 
     its(:mezon_data?) { should be_true }
 

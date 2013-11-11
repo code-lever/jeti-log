@@ -87,12 +87,12 @@ module Jeti; module Log;
       @signal_qualities ||= value_dataset(/Rx/, /Q/)
     end
 
-    def mgps_locations?
+    def mgps_data?
       device_present?(/MGPS/)
     end
 
-    def mgps_locations
-     @mgps_locations ||= build_mgps_locations
+    def mgps_data
+     @mgps_data ||= MGPSDataBuilder.build(self)
     end
 
     def mezon_data?
@@ -115,7 +115,7 @@ module Jeti; module Log;
     #
     # @return [Boolean] true if KML can be generated for this session, false otherwise
     def to_kml?
-      mgps_locations?
+      mgps_data?
     end
 
     # Converts the session into a KML document containing a placemark.
@@ -172,7 +172,7 @@ module Jeti; module Log;
       raise RuntimeError, 'No coordinates available for KML generation' unless to_kml?
       options = apply_default_placemark_options(options)
 
-      coords = mgps_locations.map { |l| [l.longitude, l.latitude, l.altitude] }
+      coords = mgps_data.map { |l| [l.longitude, l.latitude, l.altitude] }
       KML::Placemark.new(
           :name => options[:name],
           :style_url => options[:style_url],
@@ -208,22 +208,6 @@ module Jeti; module Log;
       options = { :style_url => '#default-poly-style' }.merge(options)
       options = { :tessellate => true }.merge(options)
       options
-    end
-
-    def build_mgps_locations
-      lats = value_dataset(/MGPS/, /Latitude/)
-      lons = value_dataset(/MGPS/, /Longitude/)
-      alts = value_dataset(/MGPS/, /Altitude/)
-      crss = value_dataset(/MGPS/, /Course/)
-
-      lats.map do |raw_lat|
-        time = raw_lat[0]
-        lat = raw_lat[1]
-        lon = lons.min_by { |lon| (lon[0] - time).abs }[1]
-        alt = alts.min_by { |alt| (alt[0] - time).abs }[1]
-        crs = crss.min_by { |crs| (crs[0] - time).abs }[1]
-        Coordinate.new(time, lat, lon, alt, crs)
-      end
     end
 
     def build_rx_voltages

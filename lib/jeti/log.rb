@@ -1,4 +1,4 @@
-require 'jeti/log/coordinate'
+require 'jeti/log/mgps_data'
 require 'jeti/log/entry'
 require 'jeti/log/file'
 require 'jeti/log/header'

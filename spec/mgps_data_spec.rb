@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Jeti::Log::Coordinate do
+describe Jeti::Log::MGPSData do
 
   it 'does stuff'
 
