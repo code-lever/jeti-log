@@ -100,7 +100,7 @@ module Jeti; module Log;
     end
 
     def mezon_data
-      @mezon_data ||= build_mezon_data
+      @mezon_data ||= MezonDataBuilder.build(self)
     end
 
     def tx_data?
@@ -208,32 +208,6 @@ module Jeti; module Log;
       options = { :style_url => '#default-poly-style' }.merge(options)
       options = { :tessellate => true }.merge(options)
       options
-    end
-
-    def build_mezon_data
-      vbatts = value_dataset(/Mezon/i, /U Battery/, ->(val) { val / 10.0 })
-      ibatts = value_dataset(/Mezon/i, /I Battery/)
-      vbecs = value_dataset(/Mezon/i, /U BEC/, ->(val) { val / 10.0 })
-      ibecs = value_dataset(/Mezon/i, /I BEC/)
-      mahs = value_dataset(/Mezon/i, /Capacity/)
-      rpms = value_dataset(/Mezon/i, /Revolution/)
-      temps = value_dataset(/Mezon/i, /Temp/)
-      times = value_dataset(/Mezon/i, /Run Time/)
-      pwms = value_dataset(/Mezon/i, /PWM/)
-
-      vbatts.map do |raw_vb|
-        time = raw_vb[0]
-        vbatt = raw_vb[1]
-        ibatt = ibatts.min_by { |e| (e[0] - time).abs }[1]
-        vbec = vbecs.min_by { |e| (e[0] - time).abs }[1]
-        ibec = ibecs.min_by { |e| (e[0] - time).abs }[1]
-        mah = mahs.min_by { |e| (e[0] - time).abs }[1]
-        rpm = rpms.min_by { |e| (e[0] - time).abs }[1]
-        temp = temps.min_by { |e| (e[0] - time).abs }[1]
-        runtime = times.min_by { |e| (e[0] - time).abs }[1]
-        pwm = pwms.min_by { |e| (e[0] - time).abs }[1]
-        MezonData.new(time, vbatt, ibatt, vbec, ibec, mah, rpm, temp, runtime, pwm)
-      end
     end
 
     def build_mgps_locations
