@@ -103,6 +103,14 @@ module Jeti; module Log;
       @mezon_data ||= build_mezon_data
     end
 
+    def tx_data?
+      device_present?(/Tx/)
+    end
+
+    def tx_data
+      @tx_data ||= build_tx_data
+    end
+
     # Determines if KML methods can be called for this session.
     #
     # @return [Boolean] true if KML can be generated for this session, false otherwise
@@ -239,6 +247,10 @@ module Jeti; module Log;
 
     def build_rx_voltages
       build_value_dataset(/Rx/, /U Rx/, ->(val) { val / 100.0 })
+    end
+
+    def build_tx_data
+      []
     end
 
     def build_value_dataset(device, sensor, modifier = ->(val) { val })

@@ -358,6 +358,16 @@ describe Jeti::Log::File do
 
   end
 
+  context 'with data file tx-controls.log' do
+
+    before(:all) { @file = Jeti::Log::File.new(data_file('tx-controls.log')) }
+
+    subject { @file }
+
+    its(:duration) { should be_within(1).of(19) }
+
+  end
+
   it 'should raise for invalid or missing files' do
     files = invalid_data_files
     files.should have(9).files
