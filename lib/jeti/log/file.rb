@@ -71,60 +71,6 @@ module Jeti; module Log;
       @antenna2_signals ||= build_value_dataset(/Rx/, /A2/)
     end
 
-    def bec_voltages?
-      !bec_voltages.empty?
-    end
-
-    def bec_voltages
-      @bec_voltages ||= build_bec_voltages
-    end
-
-    def esc_voltages?
-      !esc_voltages.empty?
-    end
-
-    def esc_voltages
-      @esc_voltages ||= build_esc_voltages
-    end
-
-    def esc_temperatures?
-      !esc_temperatures.empty?
-    end
-
-    def esc_temperatures(unit = :c)
-      @esc_temperatures ||= build_value_dataset(/Mezon/i, /Temp/)
-      case unit
-      when :f
-        @esc_temperatures.map { |t| [t[0], 32 + (t[1] * (9.0 / 5.0))] }
-      else
-        @esc_temperatures
-      end
-    end
-
-    def esc_run_times?
-      !esc_run_times.empty?
-    end
-
-    def esc_run_times
-      @esc_run_times ||= build_value_dataset(/Mezon/i, /Run Time/)
-    end
-
-    def esc_capacities?
-      !esc_capacities.empty?
-    end
-
-    def esc_capacities
-      @esc_capacities ||= build_value_dataset(/Mezon/i, /Capacity/)
-    end
-
-    def esc_rpms?
-      !esc_rpms.empty?
-    end
-
-    def esc_rpms
-      @esc_rpms ||= build_value_dataset(/Mezon/i, /Revolution/)
-    end
-
     def rx_voltages?
       !rx_voltages.empty?
     end
@@ -147,6 +93,14 @@ module Jeti; module Log;
 
     def mgps_locations
      @mgps_locations ||= build_mgps_locations
+    end
+
+    def mezon_data?
+      device_present?(/Mezon/i)
+    end
+
+    def mezon_data
+      @mezon_data ||= build_mezon_data
     end
 
     # Determines if KML methods can be called for this session.
@@ -241,6 +195,32 @@ module Jeti; module Log;
       options
     end
 
+    def build_mezon_data
+      vbatts = build_value_dataset(/Mezon/i, /U Battery/, ->(val) { val / 10.0 })
+      ibatts = build_value_dataset(/Mezon/i, /I Battery/)
+      vbecs = build_value_dataset(/Mezon/i, /U BEC/, ->(val) { val / 10.0 })
+      ibecs = build_value_dataset(/Mezon/i, /I BEC/)
+      mahs = build_value_dataset(/Mezon/i, /Capacity/)
+      rpms = build_value_dataset(/Mezon/i, /Revolution/)
+      temps = build_value_dataset(/Mezon/i, /Temp/)
+      times = build_value_dataset(/Mezon/i, /Run Time/)
+      pwms = build_value_dataset(/Mezon/i, /PWM/)
+
+      vbatts.map do |raw_vb|
+        time = raw_vb[0]
+        vbatt = raw_vb[1]
+        ibatt = ibatts.min_by { |e| (e[0] - time).abs }[1]
+        vbec = vbecs.min_by { |e| (e[0] - time).abs }[1]
+        ibec = ibecs.min_by { |e| (e[0] - time).abs }[1]
+        mah = mahs.min_by { |e| (e[0] - time).abs }[1]
+        rpm = rpms.min_by { |e| (e[0] - time).abs }[1]
+        temp = temps.min_by { |e| (e[0] - time).abs }[1]
+        runtime = times.min_by { |e| (e[0] - time).abs }[1]
+        pwm = pwms.min_by { |e| (e[0] - time).abs }[1]
+        MezonData.new(time, vbatt, ibatt, vbec, ibec, mah, rpm, temp, runtime, pwm)
+      end
+    end
+
     def build_mgps_locations
       lats = build_value_dataset(/MGPS/, /Latitude/)
       lons = build_value_dataset(/MGPS/, /Longitude/)
@@ -255,14 +235,6 @@ module Jeti; module Log;
         crs = crss.min_by { |crs| (crs[0] - time).abs }[1]
         Coordinate.new(time, lat, lon, alt, crs)
       end
-    end
-
-    def build_bec_voltages
-      build_value_dataset(/Mezon/i, /U BEC/, ->(val) { val / 10.0 })
-    end
-
-    def build_esc_voltages
-      build_value_dataset(/Mezon/i, /U Battery/, ->(val) { val / 10.0 })
     end
 
     def build_rx_voltages

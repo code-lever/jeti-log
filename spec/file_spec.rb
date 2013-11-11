@@ -137,6 +137,8 @@ describe Jeti::Log::File do
       expect(loc.course).to eql(0)
     end
 
+    its(:mezon_data?) { should be_false }
+
     its(:to_kml?) { should be_true }
 
     its(:to_kml) { should be_a(String) }
@@ -165,30 +167,33 @@ describe Jeti::Log::File do
 
     its(:antenna2_signals?) { should be_true }
 
-    its(:bec_voltages?) { should be_true }
-
-    it 'should have some select bec voltages' do
-      expect(subject.bec_voltages[0]).to eql([1009713, 5.5])
-      expect(subject.bec_voltages[10]).to eql([1012219, 5.5])
-      expect(subject.bec_voltages[35]).to eql([1018579, 5.5])
-    end
-
-    its(:esc_voltages?) { should be_true }
-
-    it 'should have some select esc voltages' do
-      expect(subject.esc_voltages[0]).to eql([1009713, 22.9])
-      expect(subject.esc_voltages[10]).to eql([1011179, 22.9])
-      expect(subject.esc_voltages[50]).to eql([1016099, 22.9])
-      expect(subject.esc_voltages[60]).to eql([1017179, 22.9])
-    end
-
-    its(:esc_temperatures?) { should be_true }
-
     its(:rx_voltages?) { should be_true }
 
     its(:signal_qualities?) { should be_true }
 
     its(:mgps_locations?) { should be_false }
+
+    its(:mezon_data?) { should be_true }
+
+    it 'should have some select mezon data' do
+      d = subject.mezon_data[0]
+      expect(d.battery_current).to be_within(0.1).of(0)
+      expect(d.battery_voltage).to be_within(0.1).of(22.9)
+      expect(d.bec_current).to be_within(0.1).of(0.1)
+      expect(d.bec_voltage).to be_within(0.1).of(5.5)
+
+      d = subject.mezon_data[35]
+      expect(d.battery_current).to be_within(0.1).of(0)
+      expect(d.battery_voltage).to be_within(0.1).of(22.9)
+      expect(d.bec_current).to be_within(0.1).of(0.1)
+      expect(d.bec_voltage).to be_within(0.1).of(5.5)
+
+      d = subject.mezon_data[60]
+      expect(d.battery_current).to be_within(0.1).of(0)
+      expect(d.battery_voltage).to be_within(0.1).of(22.9)
+      expect(d.bec_current).to be_within(0.1).of(0.1)
+      expect(d.bec_voltage).to be_within(0.1).of(5.5)
+    end
 
     its(:to_kml?) { should be_false }
 
@@ -212,40 +217,39 @@ describe Jeti::Log::File do
 
     its(:antenna2_signals?) { should be_true }
 
-    its(:bec_voltages?) { should be_true }
-
-    it 'should have some select bec voltages' do
-      expect(subject.bec_voltages[0]).to eql([304210, 5.5])
-      expect(subject.bec_voltages[10]).to eql([306719, 5.5])
-      expect(subject.bec_voltages[50]).to eql([316519, 5.5])
-      expect(subject.bec_voltages[120]).to eql([333722, 5.5])
-    end
-
-    its(:esc_voltages?) { should be_true }
-
-    it 'should have some select esc voltages' do
-      expect(subject.esc_voltages[0]).to eql([304210, 46.2])
-      expect(subject.esc_voltages[10]).to eql([305578, 46.2])
-      expect(subject.esc_voltages[50]).to eql([310319, 46.2])
-      expect(subject.esc_voltages[160]).to eql([323800, 46.2])
-    end
-
-    its(:esc_temperatures?) { should be_true }
-
-    it 'should have some select esc temperatures' do
-      expect(subject.esc_temperatures(:c)[0]).to eql([304210, 17])
-      expect(subject.esc_temperatures(:f)[0]).to eql([304210, 62.6])
-      expect(subject.esc_temperatures(:c)[10]).to eql([310018, 17])
-      expect(subject.esc_temperatures(:f)[10]).to eql([310018, 62.6])
-      expect(subject.esc_temperatures(:c)[50]).to eql([334623, 16])
-      expect(subject.esc_temperatures(:f)[50]).to eql([334623, 60.8])
-    end
-
     its(:rx_voltages?) { should be_true }
 
     its(:signal_qualities?) { should be_true }
 
     its(:mgps_locations?) { should be_false }
+
+    its(:mezon_data?) { should be_true }
+
+    it 'should have some select mezon data' do
+      d = subject.mezon_data[0]
+      expect(d.battery_current).to be_within(0.1).of(0)
+      expect(d.battery_voltage).to be_within(0.1).of(46.2)
+      expect(d.bec_current).to be_within(0.1).of(0.1)
+      expect(d.bec_voltage).to be_within(0.1).of(5.5)
+      expect(d.temperature(:c)).to be_within(0.1).of(17)
+      expect(d.temperature(:f)).to be_within(0.1).of(62.6)
+
+      d = subject.mezon_data[20]
+      expect(d.battery_current).to be_within(0.1).of(0)
+      expect(d.battery_voltage).to be_within(0.1).of(46.2)
+      expect(d.bec_current).to be_within(0.1).of(0.1)
+      expect(d.bec_voltage).to be_within(0.1).of(5.5)
+      expect(d.temperature(:c)).to be_within(0.1).of(17)
+      expect(d.temperature(:f)).to be_within(0.1).of(62.6)
+
+      d = subject.mezon_data[220]
+      expect(d.battery_current).to be_within(0.1).of(0)
+      expect(d.battery_voltage).to be_within(0.1).of(46.1)
+      expect(d.bec_current).to be_within(0.1).of(0.1)
+      expect(d.bec_voltage).to be_within(0.1).of(5.5)
+      expect(d.temperature(:c)).to be_within(0.1).of(16)
+      expect(d.temperature(:f)).to be_within(0.1).of(60.8)
+    end
 
     its(:to_kml?) { should be_false }
 
@@ -269,61 +273,80 @@ describe Jeti::Log::File do
 
     its(:antenna2_signals?) { should be_true }
 
-    its(:bec_voltages?) { should be_true }
-
-    it 'should have some select bec voltages' do
-      expect(subject.bec_voltages[0]).to eql([180401, 5.5])
-      expect(subject.bec_voltages[10]).to eql([182518, 5.5])
-      expect(subject.bec_voltages[50]).to eql([190579, 5.5])
-      expect(subject.bec_voltages[120]).to eql([204359, 5.5])
-    end
-
-    its(:esc_voltages?) { should be_true }
-
-    it 'should have some select esc voltages' do
-      expect(subject.esc_voltages[0]).to eql([180401, 49.8])
-      expect(subject.esc_voltages[10]).to eql([181418, 49.8])
-      expect(subject.esc_voltages[50]).to eql([185679, 49.8])
-      expect(subject.esc_voltages[1600]).to eql([338418, 47.9])
-    end
-
-    its(:esc_temperatures?) { should be_true }
-
-    it 'should have some select esc temperatures' do
-      expect(subject.esc_temperatures(:c)[0]).to eql([180401, 21])
-      expect(subject.esc_temperatures(:c)[100]).to eql([229858, 25])
-      expect(subject.esc_temperatures(:c)[500]).to eql([426701, 34])
-    end
-
-    its(:esc_run_times?) { should be_true }
-
-    it 'should have some select run times' do
-      expect(subject.esc_run_times[0]).to eql([180401, 0])
-      expect(subject.esc_run_times[100]).to eql([278678, 92])
-      expect(subject.esc_run_times[370]).to eql([548638, 294])
-    end
-
-    its(:esc_capacities?) { should be_true }
-
-    it 'should have some select capacities' do
-      expect(subject.esc_capacities[0]).to eql([180401, 0])
-      expect(subject.esc_capacities[100]).to eql([230044, 81])
-      expect(subject.esc_capacities[700]).to eql([528257, 696])
-    end
-
-    its(:esc_rpms?) { should be_true }
-
-    it 'should have some select rpms' do
-      expect(subject.esc_rpms[0]).to eql([180401, 0])
-      expect(subject.esc_rpms[100]).to eql([190579, 789])
-      expect(subject.esc_rpms[1000]).to eql([279458, 2521])
-    end
-
     its(:rx_voltages?) { should be_true }
 
     its(:signal_qualities?) { should be_true }
 
     its(:mgps_locations?) { should be_false }
+
+    its(:mezon_data?) { should be_true }
+
+    it 'should have some select mezon data' do
+      d = subject.mezon_data[0]
+      expect(d.time).to eql(180401)
+      expect(d.battery_current).to eql(0)
+      expect(d.battery_voltage).to be_within(0.1).of(49.8)
+      expect(d.bec_current).to be_within(0.1).of(0.0)
+      expect(d.bec_voltage).to be_within(0.1).of(5.5)
+      expect(d.temperature(:c)).to be_within(0.1).of(21)
+      expect(d.temperature(:f)).to be_within(0.1).of(69.8)
+      expect(d.capacity).to eql(0)
+      expect(d.rpm).to eql(0)
+      expect(d.run_time).to eql(0)
+      expect(d.pwm).to eql(0)
+
+      d = subject.mezon_data[200]
+      expect(d.time).to eql(200528)
+      expect(d.battery_current).to eql(5)
+      expect(d.battery_voltage).to be_within(0.1).of(49.4)
+      expect(d.bec_current).to be_within(0.1).of(0.0)
+      expect(d.bec_voltage).to be_within(0.1).of(5.5)
+      expect(d.temperature(:c)).to be_within(0.1).of(23)
+      expect(d.temperature(:f)).to be_within(0.1).of(73.4)
+      expect(d.capacity).to eql(10)
+      expect(d.rpm).to eql(1732)
+      expect(d.run_time).to eql(14)
+      expect(d.pwm).to eql(26)
+
+      d = subject.mezon_data[500]
+      expect(d.time).to eql(230044)
+      expect(d.battery_current).to eql(9)
+      expect(d.battery_voltage).to be_within(0.1).of(48.6)
+      expect(d.bec_current).to be_within(0.1).of(0.0)
+      expect(d.bec_voltage).to be_within(0.1).of(5.5)
+      expect(d.temperature(:c)).to be_within(0.1).of(25)
+      expect(d.temperature(:f)).to be_within(0.1).of(77)
+      expect(d.capacity).to eql(81)
+      expect(d.rpm).to eql(2543)
+      expect(d.run_time).to eql(44)
+      expect(d.pwm).to eql(88)
+
+      d = subject.mezon_data[1000]
+      expect(d.time).to eql(279377)
+      expect(d.battery_current).to eql(9)
+      expect(d.battery_voltage).to be_within(0.1).of(48.2)
+      expect(d.bec_current).to be_within(0.1).of(0.0)
+      expect(d.bec_voltage).to be_within(0.1).of(5.5)
+      expect(d.temperature(:c)).to be_within(0.1).of(28)
+      expect(d.temperature(:f)).to be_within(0.1).of(82.4)
+      expect(d.capacity).to eql(206)
+      expect(d.rpm).to eql(2522)
+      expect(d.run_time).to eql(93)
+      expect(d.pwm).to eql(88)
+
+      d = subject.mezon_data[1500]
+      expect(d.time).to eql(328599)
+      expect(d.battery_current).to eql(9)
+      expect(d.battery_voltage).to be_within(0.1).of(47.9)
+      expect(d.bec_current).to be_within(0.1).of(0.0)
+      expect(d.bec_voltage).to be_within(0.1).of(5.5)
+      expect(d.temperature(:c)).to be_within(0.1).of(31)
+      expect(d.temperature(:f)).to be_within(0.1).of(87.8)
+      expect(d.capacity).to eql(329)
+      expect(d.rpm).to eql(2516)
+      expect(d.run_time).to eql(142)
+      expect(d.pwm).to eql(88)
+    end
 
     its(:to_kml?) { should be_false }
 
