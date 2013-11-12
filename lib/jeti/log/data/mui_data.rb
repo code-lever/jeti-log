@@ -4,4 +4,12 @@ module Jeti; module Log; module Data;
 
   end
 
+  class MuiDataBuilder
+
+    def self.build(file)
+      []
+    end
+
+  end
+
 end; end; end

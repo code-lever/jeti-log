@@ -71,6 +71,14 @@ module Jeti; module Log;
       @mezon_data ||= Data::MezonDataBuilder.build(self)
     end
 
+    def mui_data?
+      device_present?(/Mezon/i)
+    end
+
+    def mui_data
+      @mui_data ||= Data::MuiDataBuilder.build(self)
+    end
+
     def rx_data?
       device_present?(/Rx/)
     end
