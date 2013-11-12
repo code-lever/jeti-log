@@ -3,9 +3,11 @@ module Jeti; module Log;
   class MezonDataBuilder
 
     def self.build(file)
-      vbatts = file.value_dataset(/Mezon/i, /U Battery/, ->(val) { val / 10.0 })
+      div10 = ->(val) { val / 10.0 }
+      #CompositeDatasetBuilder.build(file, MezonData, /Mezon/i)
+      vbatts = file.value_dataset(/Mezon/i, /U Battery/, div10)
       ibatts = file.value_dataset(/Mezon/i, /I Battery/)
-      vbecs = file.value_dataset(/Mezon/i, /U BEC/, ->(val) { val / 10.0 })
+      vbecs = file.value_dataset(/Mezon/i, /U BEC/, div10)
       ibecs = file.value_dataset(/Mezon/i, /I BEC/)
       mahs = file.value_dataset(/Mezon/i, /Capacity/)
       rpms = file.value_dataset(/Mezon/i, /Revolution/)
