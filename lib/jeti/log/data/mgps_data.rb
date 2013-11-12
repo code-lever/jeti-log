@@ -1,4 +1,4 @@
-module Jeti; module Log;
+module Jeti; module Log; module Data;
 
   class MGPSData
 
@@ -37,4 +37,4 @@ module Jeti; module Log;
 
   end
 
-end; end
+end; end; end

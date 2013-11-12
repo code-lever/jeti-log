@@ -55,44 +55,12 @@ module Jeti; module Log;
       (@entries.last.time - @entries.first.time) / 1000.0
     end
 
-    def antenna1_signals?
-      !antenna1_signals.empty?
-    end
-
-    def antenna1_signals
-      @antenna1_signals ||= value_dataset(/Rx/, /A1/)
-    end
-
-    def antenna2_signals?
-      !antenna2_signals.empty?
-    end
-
-    def antenna2_signals
-      @antenna2_signals ||= value_dataset(/Rx/, /A2/)
-    end
-
-    def rx_voltages?
-      !rx_voltages.empty?
-    end
-
-    def rx_voltages
-      @rx_voltages ||= build_rx_voltages
-    end
-
-    def signal_qualities?
-      !signal_qualities.empty?
-    end
-
-    def signal_qualities
-      @signal_qualities ||= value_dataset(/Rx/, /Q/)
-    end
-
     def mgps_data?
       device_present?(/MGPS/)
     end
 
     def mgps_data
-     @mgps_data ||= MGPSDataBuilder.build(self)
+     @mgps_data ||= Data::MGPSDataBuilder.build(self)
     end
 
     def mezon_data?
@@ -100,7 +68,15 @@ module Jeti; module Log;
     end
 
     def mezon_data
-      @mezon_data ||= MezonDataBuilder.build(self)
+      @mezon_data ||= Data::MezonDataBuilder.build(self)
+    end
+
+    def rx_data?
+      device_present?(/Rx/)
+    end
+
+    def rx_data
+      @rx_data ||= Data::RxDataBuilder.build(self)
     end
 
     def tx_data?
@@ -108,7 +84,7 @@ module Jeti; module Log;
     end
 
     def tx_data
-      @tx_data ||= build_tx_data
+      @tx_data ||= Data::TxDataBuilder.build(self)
     end
 
     # Determines if KML methods can be called for this session.
@@ -210,16 +186,9 @@ module Jeti; module Log;
       options
     end
 
-    def build_rx_voltages
-      value_dataset(/Rx/, /U Rx/, ->(val) { val / 100.0 })
-    end
-
-    def build_tx_data
-      []
-    end
-
     def device_present?(device)
       @headers.any? { |h| device =~ h.name }
+      # XXX improve, make sure there are entries
     end
 
     def headers_and_entries_for_device(device)

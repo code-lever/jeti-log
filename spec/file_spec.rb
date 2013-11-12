@@ -10,45 +10,7 @@ describe Jeti::Log::File do
 
     its(:duration) { should be_within(1.0).of(60.0) }
 
-    its(:antenna1_signals?) { should be_true }
-
-    it { should have(115).antenna1_signals }
-
-    it 'should have some select antenna1 signals' do
-      expect(subject.antenna1_signals[0]).to eql([1073617, 9])
-      expect(subject.antenna1_signals[50]).to eql([1099599, 9])
-      expect(subject.antenna1_signals[100]).to eql([1125599, 9])
-    end
-
-    its(:antenna2_signals?) { should be_true }
-
-    it { should have(115).antenna2_signals }
-
-    it 'should have some select antenna2 signals' do
-      expect(subject.antenna1_signals[10]).to eql([1078799, 9])
-      expect(subject.antenna1_signals[60]).to eql([1104817, 9])
-      expect(subject.antenna1_signals[90]).to eql([1120425, 9])
-    end
-
-    its(:rx_voltages?) { should be_true }
-
-    it { should have(115).rx_voltages }
-
-    it 'should have some select rx voltages' do
-      expect(subject.rx_voltages[10]).to eql([1078799, 4.71])
-      expect(subject.rx_voltages[60]).to eql([1104817, 4.7])
-      expect(subject.rx_voltages[90]).to eql([1120425, 4.71])
-    end
-
-    its(:signal_qualities?) { should be_true }
-
-    it { should have(115).signal_qualities }
-
-    it 'should have some select signal qualities' do
-      expect(subject.signal_qualities[10]).to eql([1078799, 100])
-      expect(subject.signal_qualities[60]).to eql([1104817, 100])
-      expect(subject.signal_qualities[90]).to eql([1120425, 100])
-    end
+    its(:rx_data?) { should be_true }
 
     its(:mgps_data?) { should be_false }
 
@@ -70,44 +32,28 @@ describe Jeti::Log::File do
 
     its(:duration) { should be_within(0.1).of(286.2) }
 
-    its(:antenna1_signals?) { should be_true }
+    its(:rx_data?) { should be_true }
 
-    it { should have(553).antenna1_signals }
+    it { should have(553).rx_data }
 
-    it 'should have some select antenna1 signals' do
-      expect(subject.antenna1_signals[0]).to eql([219714, 9])
-      expect(subject.antenna1_signals[50]).to eql([244741, 9])
-      expect(subject.antenna1_signals[100]).to eql([270738, 9])
-    end
+    it 'should have some select rx data' do
+      d = subject.rx_data[0]
+      expect(d.antenna1).to eql(9)
+      expect(d.antenna2).to eql(9)
+      expect(d.quality).to eql(100)
+      expect(d.voltage).to be_within(0.1).of(4.7)
 
-    its(:antenna2_signals?) { should be_true }
+      d = subject.rx_data[100]
+      expect(d.antenna1).to eql(9)
+      expect(d.antenna2).to eql(9)
+      expect(d.quality).to eql(100)
+      expect(d.voltage).to be_within(0.1).of(4.7)
 
-    it { should have(553).antenna2_signals }
-
-    it 'should have some select antenna2 signals' do
-      expect(subject.antenna1_signals[10]).to eql([223938, 9])
-      expect(subject.antenna1_signals[60]).to eql([249938, 9])
-      expect(subject.antenna1_signals[90]).to eql([265538, 9])
-    end
-
-    its(:rx_voltages?) { should be_true }
-
-    it { should have(553).rx_voltages }
-
-    it 'should have some select rx voltages' do
-      expect(subject.rx_voltages[10]).to eql([223938, 4.69])
-      expect(subject.rx_voltages[60]).to eql([249938, 4.69])
-      expect(subject.rx_voltages[90]).to eql([265538, 4.69])
-    end
-
-    its(:signal_qualities?) { should be_true }
-
-    it { should have(553).signal_qualities }
-
-    it 'should have some select signal qualities' do
-      expect(subject.signal_qualities[10]).to eql([223938, 100])
-      expect(subject.signal_qualities[60]).to eql([249938, 100])
-      expect(subject.signal_qualities[90]).to eql([265538, 100])
+      d = subject.rx_data[400]
+      expect(d.antenna1).to eql(5)
+      expect(d.antenna2).to eql(4)
+      expect(d.quality).to eql(96)
+      expect(d.voltage).to be_within(0.1).of(4.7)
     end
 
     its(:mgps_data?) { should be_true }
@@ -163,13 +109,7 @@ describe Jeti::Log::File do
 
     its(:duration) { should be_within(0.1).of(9.2) }
 
-    its(:antenna1_signals?) { should be_true }
-
-    its(:antenna2_signals?) { should be_true }
-
-    its(:rx_voltages?) { should be_true }
-
-    its(:signal_qualities?) { should be_true }
+    its(:rx_data?) { should be_true }
 
     its(:mgps_data?) { should be_false }
 
@@ -213,13 +153,7 @@ describe Jeti::Log::File do
 
     its(:duration) { should be_within(0.1).of(43.6) }
 
-    its(:antenna1_signals?) { should be_true }
-
-    its(:antenna2_signals?) { should be_true }
-
-    its(:rx_voltages?) { should be_true }
-
-    its(:signal_qualities?) { should be_true }
+    its(:rx_data?) { should be_true }
 
     its(:mgps_data?) { should be_false }
 
@@ -269,13 +203,7 @@ describe Jeti::Log::File do
 
     its(:duration) { should be_within(1).of(371) }
 
-    its(:antenna1_signals?) { should be_true }
-
-    its(:antenna2_signals?) { should be_true }
-
-    its(:rx_voltages?) { should be_true }
-
-    its(:signal_qualities?) { should be_true }
+    its(:rx_data?) { should be_true }
 
     its(:mgps_data?) { should be_false }
 

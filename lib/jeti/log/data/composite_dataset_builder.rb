@@ -1,4 +1,4 @@
-module Jeti; module Log;
+module Jeti; module Log; module Data;
 
   class CompositeDatasetBuilder
 
@@ -27,4 +27,4 @@ module Jeti; module Log;
 
   end
 
-end; end
+end; end; end
