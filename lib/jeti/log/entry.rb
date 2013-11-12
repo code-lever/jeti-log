@@ -31,6 +31,8 @@ module Jeti; module Log;
         (min * 60) + sec
       when '9'
         format_gps(raw[2].to_i, raw[3].to_i)
+      when '14'
+        format_date(raw[3])
       else
         nil
       end
@@ -39,6 +41,13 @@ module Jeti; module Log;
     end
 
     private
+
+    def format_date(val)
+      month = (val & 0xFF00) >> 8
+      day = val >> 16
+      year = val & 0x00FF
+      Date.new(year, month, day)
+    end
 
     def format_gps(dec, val)
       minute = (val & 0xFFFF) / 1000.0
