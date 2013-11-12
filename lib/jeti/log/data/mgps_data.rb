@@ -2,8 +2,8 @@ module Jeti; module Log; module Data;
 
   class MGPSData
 
-    attr_reader :time # XXX what is this?
-    attr_reader :stamp
+    attr_reader :time
+    attr_reader :stamp # XXX what is this?
     attr_reader :latitude
     attr_reader :longitude
     attr_reader :quality # might be binary 1/0 if quality or not
@@ -12,7 +12,7 @@ module Jeti; module Log; module Data;
     attr_reader :speed
     attr_reader :course
     attr_reader :azimuth
-    attr_reader :impulse
+    attr_reader :impulse # what is this?
     attr_reader :date
 
     def initialize(time, fields)
