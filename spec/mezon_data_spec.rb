@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Jeti::Log::MezonData do
 
-  subject { Jeti::Log::MezonData.new(25, 15.1, 5, 5.4, 1, 250, 1000, 25, 150, 99) }
+  subject { Jeti::Log::MezonData.new(25, [15.1, 5, 5.4, 1, 250, 1000, 25, 150, 99]) }
 
   its(:time) { should eql(25) }
 

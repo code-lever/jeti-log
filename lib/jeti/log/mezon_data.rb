@@ -1,37 +1,5 @@
 module Jeti; module Log;
 
-  class MezonDataBuilder
-
-    def self.build(file)
-      div10 = ->(val) { val / 10.0 }
-      #CompositeDatasetBuilder.build(file, MezonData, /Mezon/i)
-      vbatts = file.value_dataset(/Mezon/i, /U Battery/, div10)
-      ibatts = file.value_dataset(/Mezon/i, /I Battery/)
-      vbecs = file.value_dataset(/Mezon/i, /U BEC/, div10)
-      ibecs = file.value_dataset(/Mezon/i, /I BEC/)
-      mahs = file.value_dataset(/Mezon/i, /Capacity/)
-      rpms = file.value_dataset(/Mezon/i, /Revolution/)
-      temps = file.value_dataset(/Mezon/i, /Temp/)
-      times = file.value_dataset(/Mezon/i, /Run Time/)
-      pwms = file.value_dataset(/Mezon/i, /PWM/)
-
-      vbatts.map do |raw_vb|
-        time = raw_vb[0]
-        vbatt = raw_vb[1]
-        ibatt = ibatts.min_by { |e| (e[0] - time).abs }[1]
-        vbec = vbecs.min_by { |e| (e[0] - time).abs }[1]
-        ibec = ibecs.min_by { |e| (e[0] - time).abs }[1]
-        mah = mahs.min_by { |e| (e[0] - time).abs }[1]
-        rpm = rpms.min_by { |e| (e[0] - time).abs }[1]
-        temp = temps.min_by { |e| (e[0] - time).abs }[1]
-        runtime = times.min_by { |e| (e[0] - time).abs }[1]
-        pwm = pwms.min_by { |e| (e[0] - time).abs }[1]
-        MezonData.new(time, vbatt, ibatt, vbec, ibec, mah, rpm, temp, runtime, pwm)
-      end
-    end
-
-  end
-
   class MezonData
 
     attr_reader :time
@@ -44,17 +12,10 @@ module Jeti; module Log;
     attr_reader :run_time
     attr_reader :pwm
 
-    def initialize(time, vbatt, ibatt, vbec, ibec, mah, rpm, temp, runtime, pwm)
+    def initialize(time, fields)
       @time = time
-      @battery_voltage = vbatt
-      @battery_current = ibatt
-      @bec_voltage = vbec
-      @bec_current = ibec
-      @capacity = mah
-      @rpm = rpm
-      @temperature = temp
-      @run_time = runtime
-      @pwm = pwm
+      @battery_voltage, @battery_current, @bec_voltage, @bec_current, @capacity,
+        @rpm, @temperature, @run_time, @pwm = fields
     end
 
     def temperature(unit = :c)
@@ -64,6 +25,17 @@ module Jeti; module Log;
       else
         @temperature
       end
+    end
+
+  end
+
+  class MezonDataBuilder
+
+    def self.build(file)
+      div10 = ->(val) { val / 10.0 }
+      CompositeDatasetBuilder.build(file, MezonData, /Mezon/i, [/U Battery/, div10],
+                                    /I Battery/, [/U BEC/, div10], /I BEC/, /Capacity/,
+                                    /Revolution/, /Temp/, /Run Time/, /PWM/)
     end
 
   end
