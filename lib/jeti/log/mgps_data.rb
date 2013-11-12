@@ -2,9 +2,13 @@ module Jeti; module Log;
 
   class MGPSData
 
-    attr_reader :time, :latitude, :longitude, :course
+    attr_reader :time
+    attr_reader :latitude
+    attr_reader :longitude
+    attr_reader :course
 
     def initialize(time, fields)
+      raise ArgumentError unless fields.length == 4
       @time = time
       @latitude, @longitude, @altitude, @course = fields
     end

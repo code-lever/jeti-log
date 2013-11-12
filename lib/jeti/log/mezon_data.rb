@@ -13,6 +13,7 @@ module Jeti; module Log;
     attr_reader :pwm
 
     def initialize(time, fields)
+      raise ArgumentError unless fields.length == 9
       @time = time
       @battery_voltage, @battery_current, @bec_voltage, @bec_current, @capacity,
         @rpm, @temperature, @run_time, @pwm = fields
