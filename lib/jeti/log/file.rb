@@ -72,7 +72,7 @@ module Jeti; module Log;
     end
 
     def mui_data?
-      device_present?(/Mezon/i)
+      device_present?(/MUI/)
     end
 
     def mui_data

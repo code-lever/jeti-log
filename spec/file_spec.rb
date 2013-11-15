@@ -286,6 +286,55 @@ describe Jeti::Log::File do
 
   end
 
+  context 'with data file mui-50.log' do
+
+    before(:all) { @file = Jeti::Log::File.new(data_file('mui-50.log')) }
+
+    subject { @file }
+
+    its(:duration) { should be_within(1).of(107) }
+
+    its(:rx_data?) { should be_true }
+
+    its(:mgps_data?) { should be_false }
+
+    its(:mezon_data?) { should be_false }
+
+    its(:mui_data?) { should be_true }
+
+    it 'should have some select mui data' do
+      d = subject.mui_data[0]
+      expect(d.time).to eql(110578)
+      expect(d.current).to be_within(0.1).of(1.0)
+      expect(d.voltage).to be_within(0.1).of(11.4)
+      expect(d.capacity).to eql(32)
+      expect(d.run_time).to eql(45)
+
+      d = subject.mui_data[10]
+      expect(d.time).to eql(112660)
+      expect(d.current).to be_within(0.1).of(1.0)
+      expect(d.voltage).to be_within(0.1).of(11.4)
+      expect(d.capacity).to eql(33)
+      expect(d.run_time).to eql(46)
+
+      d = subject.mui_data[340]
+      expect(d.time).to eql(183619)
+      expect(d.current).to be_within(0.1).of(3.7)
+      expect(d.voltage).to be_within(0.1).of(11.2)
+      expect(d.capacity).to eql(63)
+      expect(d.run_time).to eql(99)
+    end
+
+    its(:to_kml?) { should be_false }
+
+    specify { expect { subject.to_kml }.to raise_error }
+
+    specify { expect { subject.to_kml_file }.to raise_error }
+
+    specify { expect { subject.to_kml_placemark }.to raise_error }
+
+  end
+
   context 'with data file tx-controls.log' do
 
     before(:all) { @file = Jeti::Log::File.new(data_file('tx-controls.log')) }
