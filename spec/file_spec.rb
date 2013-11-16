@@ -292,7 +292,7 @@ describe Jeti::Log::File do
 
     subject { @file }
 
-    its(:duration) { should be_within(1).of(107) }
+    its(:duration) { should be_within(1).of(245) }
 
     its(:rx_data?) { should be_true }
 
@@ -304,25 +304,25 @@ describe Jeti::Log::File do
 
     it 'should have some select mui data' do
       d = subject.mui_data[0]
-      expect(d.time).to eql(110578)
-      expect(d.current).to be_within(0.1).of(1.0)
-      expect(d.voltage).to be_within(0.1).of(11.4)
-      expect(d.capacity).to eql(32)
-      expect(d.run_time).to eql(45)
+      expect(d.time).to eql(204719)
+      expect(d.current).to be_within(0.1).of(10.8)
+      expect(d.voltage).to be_within(0.1).of(11.8)
+      expect(d.capacity).to eql(108)
+      expect(d.run_time).to eql(189)
 
-      d = subject.mui_data[10]
-      expect(d.time).to eql(112660)
-      expect(d.current).to be_within(0.1).of(1.0)
-      expect(d.voltage).to be_within(0.1).of(11.4)
-      expect(d.capacity).to eql(33)
-      expect(d.run_time).to eql(46)
+      d = subject.mui_data[500]
+      expect(d.time).to eql(315730)
+      expect(d.current).to be_within(0.1).of(15.9)
+      expect(d.voltage).to be_within(0.1).of(10.9)
+      expect(d.capacity).to eql(709)
+      expect(d.run_time).to eql(300)
 
-      d = subject.mui_data[340]
-      expect(d.time).to eql(183619)
-      expect(d.current).to be_within(0.1).of(3.7)
-      expect(d.voltage).to be_within(0.1).of(11.2)
-      expect(d.capacity).to eql(63)
-      expect(d.run_time).to eql(99)
+      d = subject.mui_data[1000]
+      expect(d.time).to eql(426258)
+      expect(d.current).to be_within(0.1).of(8.6)
+      expect(d.voltage).to be_within(0.1).of(10.9)
+      expect(d.capacity).to eql(1324)
+      expect(d.run_time).to eql(411)
     end
 
     its(:to_kml?) { should be_false }
