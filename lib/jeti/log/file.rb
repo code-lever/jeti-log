@@ -21,7 +21,7 @@ module Jeti; module Log;
         lines = file.readlines.map(&:strip).group_by do |line|
           line.start_with?('#') ? :comments : :rows
         end
-        @name = lines.fetch(:comments, ['Unknown']).first
+        @name = lines.fetch(:comments, ['Unknown']).first.gsub(/#/, '').strip
 
         @headers = []
         @entries = []

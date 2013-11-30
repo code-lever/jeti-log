@@ -8,6 +8,8 @@ describe Jeti::Log::File do
 
     subject { @file }
 
+    its(:name) { should eql('Flame Wheel') }
+
     its(:duration) { should be_within(1.0).of(60.0) }
 
     its(:rx_data?) { should be_true }
@@ -29,6 +31,8 @@ describe Jeti::Log::File do
     before(:all) { @file = Jeti::Log::File.new(data_file('gps-crash.log')) }
 
     subject { @file }
+
+    its(:name) { should eql('Flame Wheel') }
 
     its(:duration) { should be_within(0.1).of(286.2) }
 
@@ -107,6 +111,8 @@ describe Jeti::Log::File do
 
     subject { @file }
 
+    its(:name) { should eql('Goblin 700') }
+
     its(:duration) { should be_within(0.1).of(9.2) }
 
     its(:rx_data?) { should be_true }
@@ -150,6 +156,8 @@ describe Jeti::Log::File do
     before(:all) { @file = Jeti::Log::File.new(data_file('mezon-2.log')) }
 
     subject { @file }
+
+    its(:name) { should eql('Goblin 700') }
 
     its(:duration) { should be_within(0.1).of(43.6) }
 
@@ -200,6 +208,8 @@ describe Jeti::Log::File do
     before(:all) { @file = Jeti::Log::File.new(data_file('mezon-3.log')) }
 
     subject { @file }
+
+    its(:name) { should eql('Goblin 700') }
 
     its(:duration) { should be_within(1).of(371) }
 
@@ -292,6 +302,8 @@ describe Jeti::Log::File do
 
     subject { @file }
 
+    its(:name) { should eql('Flame Wheel') }
+
     its(:duration) { should be_within(1).of(245) }
 
     its(:rx_data?) { should be_true }
@@ -340,6 +352,8 @@ describe Jeti::Log::File do
     before(:all) { @file = Jeti::Log::File.new(data_file('tx-controls.log')) }
 
     subject { @file }
+
+    its(:name) { should eql('Blade 130X') }
 
     its(:duration) { should be_within(1).of(19) }
 
