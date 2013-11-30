@@ -359,6 +359,26 @@ describe Jeti::Log::File do
 
   end
 
+  context 'with data file no-comments.log' do
+
+    before(:all) { @file = Jeti::Log::File.new(data_file('no-comments.log')) }
+
+    subject { @file }
+
+    its(:name) { should eql('Unknown') }
+
+  end
+
+  context 'with data file sharp-in-comments.log' do
+
+    before(:all) { @file = Jeti::Log::File.new(data_file('sharp-in-comments.log')) }
+
+    subject { @file }
+
+    its(:name) { should eql('Quad #4') }
+
+  end
+
   it 'should raise for invalid or missing files' do
     files = invalid_data_files
     files.should have(9).files
