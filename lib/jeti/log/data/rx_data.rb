@@ -2,6 +2,7 @@ module Jeti; module Log; module Data;
 
   class RxData
 
+    attr_reader :time
     attr_reader :voltage
     attr_reader :antenna1
     attr_reader :antenna2

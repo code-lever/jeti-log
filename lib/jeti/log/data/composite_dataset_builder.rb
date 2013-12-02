@@ -18,8 +18,7 @@ module Jeti; module Log; module Data;
       end
 
       primaries.map do |raw|
-        time = raw[0]
-        f0 = raw[1]
+        time, f0 = raw
         fn = other_data.map { |d| d.min_by { |dp| (dp[0] - time).abs }[1] }
         clazz.new(time, fn.unshift(f0))
       end
