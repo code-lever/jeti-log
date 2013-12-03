@@ -64,13 +64,14 @@ describe Jeti::Log::File do
 
     it { should have(539).mgps_data }
 
-    it 'should have some select gps locations' do
+    it 'should have some select gps information' do
       loc = subject.mgps_data[0]
       expect(loc.time).to eql(219552)
       expect(loc.latitude).to be_within(0.0001).of(41.1856)
       expect(loc.longitude).to be_within(0.0001).of(-96.0103)
       expect(loc.altitude(:meters)).to eql(309)
       expect(loc.course).to eql(0)
+      expect(loc.satellite_count).to eql(8)
 
       loc = subject.mgps_data[250]
       expect(loc.time).to eql(347038)
@@ -78,6 +79,7 @@ describe Jeti::Log::File do
       expect(loc.longitude).to be_within(0.0001).of(-96.0094)
       expect(loc.altitude(:meters)).to eql(352)
       expect(loc.course).to eql(294)
+      expect(loc.satellite_count).to eql(9)
 
       loc = subject.mgps_data[450]
       expect(loc.time).to eql(456409)
@@ -85,6 +87,7 @@ describe Jeti::Log::File do
       expect(loc.longitude).to be_within(0.0001).of(-96.0091)
       expect(loc.altitude(:meters)).to eql(333)
       expect(loc.course).to eql(0)
+      expect(loc.satellite_count).to eql(9)
     end
 
     its(:mezon_data?) { should be_false }

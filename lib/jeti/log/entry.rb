@@ -23,7 +23,7 @@ module Jeti; module Log;
     def value(sensor_id)
       raw = detail(sensor_id)
       case raw[1]
-      when '1','4','8'
+      when '0','1','4','8'
         raw[3].to_i
       when '5'
         min = (raw[3].to_i & 0xFF00) >> 8
