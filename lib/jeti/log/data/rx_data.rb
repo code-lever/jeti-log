@@ -1,4 +1,4 @@
-module Jeti; module Log; module Data;
+module Jeti; module Log; module Data
 
   class RxData
 

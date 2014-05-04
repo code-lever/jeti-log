@@ -1,4 +1,4 @@
-module Jeti; module Log;
+module Jeti; module Log
 
   class Entry
 

@@ -1,7 +1,7 @@
 require 'open-uri'
 require 'ruby_kml'
 
-module Jeti; module Log;
+module Jeti; module Log
 
   class File
 
