@@ -12,11 +12,11 @@ describe Jeti::Log::File do
 
     its(:duration) { should be_within(1.0).of(60.0) }
 
-    its(:rx_data?) { should be_true }
+    its(:rx_data?) { should be true }
 
-    its(:mgps_data?) { should be_false }
+    its(:mgps_data?) { should be false }
 
-    its(:to_kml?) { should be_false }
+    its(:to_kml?) { should be false }
 
     specify { expect { subject.to_kml }.to raise_error }
 
@@ -36,7 +36,7 @@ describe Jeti::Log::File do
 
     its(:duration) { should be_within(0.1).of(286.2) }
 
-    its(:rx_data?) { should be_true }
+    its(:rx_data?) { should be true }
 
     it { should have(553).rx_data }
 
@@ -60,7 +60,7 @@ describe Jeti::Log::File do
       expect(d.voltage).to be_within(0.1).of(4.7)
     end
 
-    its(:mgps_data?) { should be_true }
+    its(:mgps_data?) { should be true }
 
     it { should have(539).mgps_data }
 
@@ -90,9 +90,9 @@ describe Jeti::Log::File do
       expect(loc.satellite_count).to eql(9)
     end
 
-    its(:mezon_data?) { should be_false }
+    its(:mezon_data?) { should be false }
 
-    its(:to_kml?) { should be_true }
+    its(:to_kml?) { should be true }
 
     its(:to_kml) { should be_a(String) }
 
@@ -118,11 +118,11 @@ describe Jeti::Log::File do
 
     its(:duration) { should be_within(0.1).of(9.2) }
 
-    its(:rx_data?) { should be_true }
+    its(:rx_data?) { should be true }
 
-    its(:mgps_data?) { should be_false }
+    its(:mgps_data?) { should be false }
 
-    its(:mezon_data?) { should be_true }
+    its(:mezon_data?) { should be true }
 
     it 'should have some select mezon data' do
       d = subject.mezon_data[0]
@@ -144,7 +144,7 @@ describe Jeti::Log::File do
       expect(d.bec_voltage).to be_within(0.1).of(5.5)
     end
 
-    its(:to_kml?) { should be_false }
+    its(:to_kml?) { should be false }
 
     specify { expect { subject.to_kml }.to raise_error }
 
@@ -164,11 +164,11 @@ describe Jeti::Log::File do
 
     its(:duration) { should be_within(0.1).of(43.6) }
 
-    its(:rx_data?) { should be_true }
+    its(:rx_data?) { should be true }
 
-    its(:mgps_data?) { should be_false }
+    its(:mgps_data?) { should be false }
 
-    its(:mezon_data?) { should be_true }
+    its(:mezon_data?) { should be true }
 
     it 'should have some select mezon data' do
       d = subject.mezon_data[0]
@@ -196,7 +196,7 @@ describe Jeti::Log::File do
       expect(d.temperature(:f)).to be_within(0.1).of(60.8)
     end
 
-    its(:to_kml?) { should be_false }
+    its(:to_kml?) { should be false }
 
     specify { expect { subject.to_kml }.to raise_error }
 
@@ -216,11 +216,11 @@ describe Jeti::Log::File do
 
     its(:duration) { should be_within(1).of(371) }
 
-    its(:rx_data?) { should be_true }
+    its(:rx_data?) { should be true }
 
-    its(:mgps_data?) { should be_false }
+    its(:mgps_data?) { should be false }
 
-    its(:mezon_data?) { should be_true }
+    its(:mezon_data?) { should be true }
 
     it 'should have some select mezon data' do
       d = subject.mezon_data[0]
@@ -289,7 +289,7 @@ describe Jeti::Log::File do
       expect(d.pwm).to eql(88)
     end
 
-    its(:to_kml?) { should be_false }
+    its(:to_kml?) { should be false }
 
     specify { expect { subject.to_kml }.to raise_error }
 
@@ -309,13 +309,13 @@ describe Jeti::Log::File do
 
     its(:duration) { should be_within(1).of(245) }
 
-    its(:rx_data?) { should be_true }
+    its(:rx_data?) { should be true }
 
-    its(:mgps_data?) { should be_false }
+    its(:mgps_data?) { should be false }
 
-    its(:mezon_data?) { should be_false }
+    its(:mezon_data?) { should be false }
 
-    its(:mui_data?) { should be_true }
+    its(:mui_data?) { should be true }
 
     it 'should have some select mui data' do
       d = subject.mui_data[0]
@@ -340,7 +340,7 @@ describe Jeti::Log::File do
       expect(d.run_time).to eql(411)
     end
 
-    its(:to_kml?) { should be_false }
+    its(:to_kml?) { should be false }
 
     specify { expect { subject.to_kml }.to raise_error }
 
@@ -389,6 +389,36 @@ describe Jeti::Log::File do
     files.each do |f|
       expect { Jeti::Log::File.new(f) }.to raise_error
     end
+  end
+
+  describe '#jeti?' do
+
+    it 'should be false for invalid or missing files' do
+      files = invalid_data_files
+      expect(files).to have(9).files
+
+      files.each do |f|
+        expect(Jeti::Log::File.jeti?(f)).to be_falsey
+      end
+    end
+
+    it 'should be true for valid files' do
+      files = data_files
+      expect(files).to have(10).files
+
+      files.each do |f|
+        expect(Jeti::Log::File.jeti?(f)).to be_truthy
+      end
+    end
+
+    it 'should return a file object' do
+      expect(Jeti::Log::File.jeti?(data_files[0])).to be_a(Jeti::Log::File)
+    end
+
+    it 'should return nil when invalid' do
+      expect(Jeti::Log::File.jeti?(invalid_data_files[0])).to be_nil
+    end
+
   end
 
 end
