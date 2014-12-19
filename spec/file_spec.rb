@@ -38,7 +38,7 @@ describe Jeti::Log::File do
 
     its(:rx_data?) { should be true }
 
-    it { should have(553).rx_data }
+    it { is_expected.to have(553).rx_data }
 
     it 'should have some select rx data' do
       d = subject.rx_data[0]
@@ -62,7 +62,7 @@ describe Jeti::Log::File do
 
     its(:mgps_data?) { should be true }
 
-    it { should have(539).mgps_data }
+    it { is_expected.to have(539).mgps_data }
 
     it 'should have some select gps information' do
       loc = subject.mgps_data[0]
@@ -100,8 +100,8 @@ describe Jeti::Log::File do
 
     it 'should take options for file and placemark' do
       kml = subject.to_kml_file({ :name => 'File Name' }, { :name => 'Placemark Name' })
-      kml.objects[0].name.should eql('File Name')
-      kml.objects[0].features[0].name.should eql('Placemark Name')
+      expect(kml.objects[0].name).to eql('File Name')
+      expect(kml.objects[0].features[0].name).to eql('Placemark Name')
     end
 
     its(:to_kml_placemark) { should be_a(KML::Placemark) }
@@ -384,7 +384,7 @@ describe Jeti::Log::File do
 
   it 'should raise for invalid or missing files' do
     files = invalid_data_files
-    files.should have(9).files
+    expect(files).to have(9).files
 
     files.each do |f|
       expect { Jeti::Log::File.new(f) }.to raise_error
