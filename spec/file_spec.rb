@@ -18,11 +18,11 @@ describe Jeti::Log::File do
 
     its(:to_kml?) { should be false }
 
-    specify { expect { subject.to_kml }.to raise_error }
+    specify { expect { subject.to_kml }.to raise_error(RuntimeError) }
 
-    specify { expect { subject.to_kml_file }.to raise_error }
+    specify { expect { subject.to_kml_file }.to raise_error(RuntimeError) }
 
-    specify { expect { subject.to_kml_placemark }.to raise_error }
+    specify { expect { subject.to_kml_placemark }.to raise_error(RuntimeError) }
 
   end
 
@@ -146,11 +146,11 @@ describe Jeti::Log::File do
 
     its(:to_kml?) { should be false }
 
-    specify { expect { subject.to_kml }.to raise_error }
+    specify { expect { subject.to_kml }.to raise_error(RuntimeError) }
 
-    specify { expect { subject.to_kml_file }.to raise_error }
+    specify { expect { subject.to_kml_file }.to raise_error(RuntimeError) }
 
-    specify { expect { subject.to_kml_placemark }.to raise_error }
+    specify { expect { subject.to_kml_placemark }.to raise_error(RuntimeError) }
 
   end
 
@@ -198,11 +198,11 @@ describe Jeti::Log::File do
 
     its(:to_kml?) { should be false }
 
-    specify { expect { subject.to_kml }.to raise_error }
+    specify { expect { subject.to_kml }.to raise_error(RuntimeError) }
 
-    specify { expect { subject.to_kml_file }.to raise_error }
+    specify { expect { subject.to_kml_file }.to raise_error(RuntimeError) }
 
-    specify { expect { subject.to_kml_placemark }.to raise_error }
+    specify { expect { subject.to_kml_placemark }.to raise_error(RuntimeError) }
 
   end
 
@@ -291,11 +291,11 @@ describe Jeti::Log::File do
 
     its(:to_kml?) { should be false }
 
-    specify { expect { subject.to_kml }.to raise_error }
+    specify { expect { subject.to_kml }.to raise_error(RuntimeError) }
 
-    specify { expect { subject.to_kml_file }.to raise_error }
+    specify { expect { subject.to_kml_file }.to raise_error(RuntimeError) }
 
-    specify { expect { subject.to_kml_placemark }.to raise_error }
+    specify { expect { subject.to_kml_placemark }.to raise_error(RuntimeError) }
 
   end
 
@@ -342,11 +342,11 @@ describe Jeti::Log::File do
 
     its(:to_kml?) { should be false }
 
-    specify { expect { subject.to_kml }.to raise_error }
+    specify { expect { subject.to_kml }.to raise_error(RuntimeError) }
 
-    specify { expect { subject.to_kml_file }.to raise_error }
+    specify { expect { subject.to_kml_file }.to raise_error(RuntimeError) }
 
-    specify { expect { subject.to_kml_placemark }.to raise_error }
+    specify { expect { subject.to_kml_placemark }.to raise_error(RuntimeError) }
 
   end
 
@@ -387,7 +387,7 @@ describe Jeti::Log::File do
     expect(files).to have(9).files
 
     files.each do |f|
-      expect { Jeti::Log::File.new(f) }.to raise_error
+      expect { Jeti::Log::File.new(f) }.to raise_error(StandardError)
     end
   end
 
