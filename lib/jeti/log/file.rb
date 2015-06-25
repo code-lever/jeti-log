@@ -180,14 +180,14 @@ module Jeti
 
       private
 
-      def apply_default_file_options options
+      def apply_default_file_options(options)
         options = { name: 'Jeti MGPS Path' }.merge(options)
         options = { description: 'Session paths for GPS log data' }.merge(options)
         options = { style_id: 'default-poly-style' }.merge(options)
         options
       end
 
-      def apply_default_placemark_options options
+      def apply_default_placemark_options(options)
         options = { altitude_mode: 'absolute' }.merge(options)
         options = { extrude: true }.merge(options)
         options = { name: "Session (#{duration.round(1)}s)" }.merge(options)
