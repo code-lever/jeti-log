@@ -99,7 +99,7 @@ describe Jeti::Log::File do
     its(:to_kml_file) { should be_a(KMLFile) }
 
     it 'should take options for file and placemark' do
-      kml = subject.to_kml_file({ :name => 'File Name' }, { :name => 'Placemark Name' })
+      kml = subject.to_kml_file({ name: 'File Name' }, { name: 'Placemark Name' })
       expect(kml.objects[0].name).to eql('File Name')
       expect(kml.objects[0].features[0].name).to eql('Placemark Name')
     end
