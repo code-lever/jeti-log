@@ -62,7 +62,7 @@ module Jeti
       end
 
       def mgps_data
-       @mgps_data ||= Data::MGPSDataBuilder.build(self)
+        @mgps_data ||= Data::MGPSDataBuilder.build(self)
       end
 
       def mezon_data?
