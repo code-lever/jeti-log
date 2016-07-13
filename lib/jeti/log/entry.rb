@@ -57,7 +57,7 @@ module Jeti; module Log
     end
 
     def format_float(factor, val)
-      if val > 0xFFFF
+      if val > 0xFFFFFF
         # negative values
         val = val - 0xFFFFFFFF
       end
