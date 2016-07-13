@@ -57,20 +57,20 @@ module Jeti; module Log
     end
 
     def format_float(factor, val)
-      if value > 0xFFFF
+      if val > 0xFFFF
         # negative values
-        value = value - 0xFFFFFFFF
+        val = val - 0xFFFFFFFF
       end
 
       case factor
       when 1
-        value.to_f / 10.0
+        val.to_f / 10.0
       when 2
-        value.to_f / 100.0
+        val.to_f / 100.0
       when 3
-        value.to_f / 1000.0
+        val.to_f / 1000.0
       else
-        value.to_f
+        val.to_f
       end
     end
   end
