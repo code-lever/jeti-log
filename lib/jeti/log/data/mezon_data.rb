@@ -33,10 +33,8 @@ module Jeti; module Log; module Data
   class MezonDataBuilder
 
     def self.build(file)
-      div10 = ->(val) { val / 10.0 }
-      CompositeDatasetBuilder.build(file, MezonData, /Mezon/i, [/U Battery/, div10],
-                                    /I Battery/, [/U BEC/, div10], /I BEC/, /Capacity/,
-                                    /Revolution/, /Temp/, /Run Time/, /PWM/)
+      CompositeDatasetBuilder.build(file, MezonData, /Mezon/i, /U Battery/, /I Battery/,
+        /U BEC/, /I BEC/, /Capacity/, /Revolution/, /Temp/, /Run Time/, /PWM/)
     end
 
   end

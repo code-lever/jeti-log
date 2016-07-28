@@ -19,9 +19,7 @@ module Jeti; module Log; module Data
   class MuiDataBuilder
 
     def self.build(file)
-      div10 = ->(val) { val / 10.0 }
-      CompositeDatasetBuilder.build(file, MuiData, /MUI/, [/Voltage/, div10],
-                                    [/Current/, div10], /Capacity/, /Run time/)
+      CompositeDatasetBuilder.build(file, MuiData, /MUI/, /Voltage/, /Current/, /Capacity/, /Run time/)
     end
 
   end

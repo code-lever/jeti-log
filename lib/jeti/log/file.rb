@@ -171,27 +171,27 @@ module Jeti
         )
       end
 
-      def value_dataset(device, sensor, modifier = ->(val) { val })
+      def value_dataset(device, sensor)
         headers, entries = headers_and_entries_for_device(device)
         sensor_id = (headers.select { |h| sensor =~ h.name })[0].sensor_id
         entries.reject! { |e| e.detail(sensor_id).nil? }
-        entries.map { |e| [e.time, modifier.call(e.value(sensor_id))] }
+        entries.map { |e| [e.time, e.value(sensor_id)] }
       end
 
       def headers(id = nil)
         return @headers if id.nil?
         return @headers.select { |h| h.id == id }
       end
-  
+
       def device_present?(device)
         @headers.any? { |h| device =~ h.name }
         # XXX improve, make sure there are entries
       end
-  
+
       def sensor_present?(device, sensor)
         headers, _entries = headers_and_entries_for_device(device)
         sensor_headers = (headers.select { |h| sensor =~ h.name })
-    
+
         return sensor_headers.count > 0 && sensor_headers.first.sensor_id
       end
 
