@@ -24,7 +24,7 @@ module Jeti; module Log
       raw = detail(sensor_id)
       case raw[1]
       when '0','1','4','8'
-        raw[3].to_i
+        format_float(raw[2].to_i ,raw[3].to_i)
       when '5'
         min = (raw[3].to_i & 0xFF00) >> 8
         sec = (raw[3].to_i & 0x00FF)
@@ -56,6 +56,22 @@ module Jeti; module Log
       degrees * (((dec >> 1) & 1) == 1 ? -1 : 1)
     end
 
-  end
+    def format_float(factor, val)
+      if val > 0xFFFFFF
+        # negative values
+        val = val - 0xFFFFFFFF
+      end
 
+      case factor
+      when 1
+        val.to_f / 10.0
+      when 2
+        val.to_f / 100.0
+      when 3
+        val.to_f / 1000.0
+      else
+        val.to_f
+      end
+    end
+  end
 end; end

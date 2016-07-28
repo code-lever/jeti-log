@@ -178,6 +178,23 @@ module Jeti
         entries.map { |e| [e.time, modifier.call(e.value(sensor_id))] }
       end
 
+      def headers(id = nil)
+        return @headers if id.nil?
+        return @headers.select { |h| h.id == id }
+      end
+  
+      def device_present?(device)
+        @headers.any? { |h| device =~ h.name }
+        # XXX improve, make sure there are entries
+      end
+  
+      def sensor_present?(device, sensor)
+        headers, _entries = headers_and_entries_for_device(device)
+        sensor_headers = (headers.select { |h| sensor =~ h.name })
+    
+        return sensor_headers.count > 0 && sensor_headers.first.sensor_id
+      end
+
       private
 
       def apply_default_file_options(options)
@@ -194,11 +211,6 @@ module Jeti
         options = { style_url: '#default-poly-style' }.merge(options)
         options = { tessellate: true }.merge(options)
         options
-      end
-
-      def device_present?(device)
-        @headers.any? { |h| device =~ h.name }
-        # XXX improve, make sure there are entries
       end
 
       def headers_and_entries_for_device(device)
