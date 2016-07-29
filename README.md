@@ -1,6 +1,6 @@
 # Jeti::Log [![Build Status](https://travis-ci.org/code-lever/jeti-log.png)](https://travis-ci.org/code-lever/jeti-log) [![Dependency Status](https://gemnasium.com/code-lever/jeti-log.png)](https://gemnasium.com/code-lever/jeti-log) [![Code Climate](https://codeclimate.com/github/code-lever/jeti-log.png)](https://codeclimate.com/github/code-lever/jeti-log)
 
-TODO: Write a gem description
+A Ruby gem for reading Jeti telemetry log files.
 
 ## Installation
 
