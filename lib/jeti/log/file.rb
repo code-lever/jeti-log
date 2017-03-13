@@ -25,11 +25,16 @@ module Jeti
           end
           @name = /^#(.*)/.match(lines.fetch(:comments, ['# Unknown']).first)[1].strip
 
+          unknown_index = 0
           @headers = []
           @entries = []
           lines[:rows].each_with_object(';').map(&:split).each do |line|
             if '000000000' == line.first
-              if line.length == 4
+              if line.length == 3
+                unknown_index+=1
+                line << "?-#{unknown_index}"
+                line << ''
+              elsif line.length == 4
                 line << ''
               elsif line.length == 5
                 # do nothing
