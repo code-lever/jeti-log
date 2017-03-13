@@ -40,3 +40,7 @@ def invalid_data_files
   invalid << __FILE__
   invalid << 'NOFILE.TLM'
 end
+
+def unnamed_header_files
+  ["#{File.dirname(__FILE__)}/sample-data/unnamed-header.log"]
+end
