@@ -402,6 +402,14 @@ describe Jeti::Log::File do
       end
     end
 
+    it 'can import unnamed header' do
+      files = unnamed_header_files
+      
+      files.each do |f|
+        expect(Jeti::Log::File.jeti?(f)).to be_truthy
+      end
+    end
+
     it 'should be true for valid files' do
       files = data_files
       expect(files).to have(10).files
