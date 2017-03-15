@@ -382,6 +382,19 @@ describe Jeti::Log::File do
 
   end
 
+  context 'with data file unnamed-header.log' do
+    before(:all) { @file = described_class.new(data_file('unnamed-header.log')) }
+    subject { @file }
+
+    its(:name) { should eql('Slite') }
+    its(:headers) { is_expected.to have(15).entries }
+
+    it 'includes an unnamed header' do
+      unnamed = subject.headers.select { |h| h.name.start_with?('?-') }
+      expect(unnamed).to have(1).entry
+    end
+  end
+
   it 'should raise for invalid or missing files' do
     files = invalid_data_files
     expect(files).to have(9).files
@@ -402,17 +415,9 @@ describe Jeti::Log::File do
       end
     end
 
-    it 'can import unnamed header' do
-      files = unnamed_header_files
-      
-      files.each do |f|
-        expect(Jeti::Log::File.jeti?(f)).to be_truthy
-      end
-    end
-
     it 'should be true for valid files' do
       files = data_files
-      expect(files).to have(10).files
+      expect(files).to have(11).files
 
       files.each do |f|
         expect(Jeti::Log::File.jeti?(f)).to be_truthy
